@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.3.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.4.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.3.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.4.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -30,11 +30,11 @@ The repository is now `solidline/bujo-lineage`. If BRAT still tracks the old `so
 
 ## Optional journal and code appearance (0.3.0)
 
-In **Settings → BuJo Lineage → Appearance**, use independent toggles, all enabled by default:
+In **Settings → BuJo Lineage → Appearance**, use independent appearance toggles:
 
 - **Prefer JetBrains Mono**: bundled JetBrains Mono Regular for note text and code. Works offline without a separate font installation, including on iPhone. Disable it to restore theme fonts. It leaves workspace navigation and UI fonts alone.
 - **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices receive 44-pixel checkbox targets. Status symbols and text remain meaningful without color.
-- **Code highlighting**: coordinated syntax colors using Obsidian's existing language parsers and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
+- **Code block color styling** (off by default): optional colors and spacing only. Obsidian already provides syntax highlighting without this plugin. Enabling this setting coordinates colors and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
 
 The color styles follow Obsidian's light/dark mode and leave workspace panels and note backgrounds intact. The font preference is independent of both color toggles. Turn a toggle off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
 
@@ -85,7 +85,7 @@ Three identities are distinct:
 - **Occurrence ID**: unique per appearance; generated as `occ-` plus 128 random bits.
 - **Obsidian block ID**: equal to that occurrence ID. A pre-existing valid source block ID is retained and becomes that occurrence's ID.
 
-IDs use browser cryptographic randomness, never task wording, a filename, date, or line number. Source and destination references contain **occurrence IDs, not paths**. A versioned hidden inline HTML comment belongs to the same task line. It precedes trailing Tasks emoji fields, with the block anchor last. This placement matters: Tasks parses dates from the end after removing the anchor; putting the comment after dates would prevent their recognition. The comment is part of the description and is hidden in rendered Markdown; it is visible in source mode. Displayed navigation/count text is not authoritative metadata.
+IDs use browser cryptographic randomness, never task wording, a filename, date, or line number. Source and destination references contain **occurrence IDs, not paths**. A versioned hidden inline HTML comment belongs to the same task line. It precedes trailing Tasks emoji fields, with the block anchor last. Live Preview replaces a validated comment and its anchor visually with a small **history** button; tap it to open task history. Source mode shows the raw data. Malformed records remain visible for repair. The Markdown itself is never changed by this display. This placement matters: Tasks parses dates from the end after removing the anchor; putting the comment after dates would prevent their recognition. The comment is part of the description and is hidden in rendered Markdown; it is visible in Source mode. In Live Preview, the compact history indicator keeps the task readable even while editing its wording. Displayed navigation/count text is not authoritative metadata.
 
 The comment contains `encodeURIComponent(JSON.stringify(record))`, additionally encoding every hyphen as `%2D` to prevent arbitrary reason text from forming `-->`. Newlines, Unicode, `<script>`, and comment terminators round-trip as data. Stored text is never executed or inserted as HTML in modals.
 
@@ -197,3 +197,7 @@ JetBrains Mono is copyright The JetBrains Mono Project Authors and is bundled un
 ### Seeing only standard checkboxes?
 
 Update to 0.3.3 or newer through BRAT, reload Obsidian, and enable **BuJo journal styling** in BuJo Lineage settings. Tasks have explicit colored side markers and checkbox accents in the editor and rendered notes. Status symbols remain provided by BuJo Bullets. Version 0.3.3 removes the experimental inline status pills because they could overlap text in Live Preview themes. Live Preview no longer needs a data-task attribute on the task line for these styles. Keep BuJo Bullets enabled for its custom checkbox symbols. Migration counts and previous/next links are created by transferring a task; they do not appear automatically on ordinary capture tasks.
+
+### Code syntax highlighting is already built in
+
+Obsidian supplies syntax highlighting. Lineage does not add language parsers. The old Code highlighting preference is now called **Code block color styling**, defaults off on new installs, and is purely cosmetic. Existing saved choices are preserved; turn this setting off to use Obsidian/the theme for code colors. The JetBrains Mono preference remains independent.

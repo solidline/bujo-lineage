@@ -42,3 +42,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 5. In a desktop popout, toggle appearance, switch modes, close the popout, then unload the plugin. No Lineage body classes should remain. Highlighting must never change Markdown, identity comments, Tasks fields, or block anchors.
 
 6. Toggle Prefer JetBrains Mono with both color toggles off. Confirm note text, Live Preview/Source mode, inline code and fenced code use the bundled font while sidebar/UI fonts remain unchanged. Disable it to restore theme fonts. Repeat offline on iPhone; check fallback emoji and non-Latin glyphs, popout windows, and plugin unload.
+
+## Compact metadata (0.3.4)
+
+Migrate a task, then edit its wording in Live Preview. The encoded HTML comment and block ID should be replaced visually by one history button; the count, previous/next navigation and Tasks dates should remain readable. Tap history from source and destination to confirm the correct task opens. Move the cursor through the line and edit adjacent text. Switch to Source mode to verify the unchanged comment and block anchor, then back to Live Preview. Verify copied/edited tasks retain IDs and that code examples and malformed comments are not silently hidden. In settings, Code block color styling is optional: Obsidian syntax highlighting continues with it off.

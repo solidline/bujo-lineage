@@ -29,3 +29,5 @@ Version 0.3.1: the browser suite now passes **25 checks**, including bundled Jet
 Version 0.3.2: 28 Chromium checks pass, including all six explicit editor-line status decorations without host data-task attributes, visible open labels, and distinct done/migrated side markers. This tests the reported selector mismatch using real CodeMirror fixtures, not a live Obsidian app.
 
 Version 0.3.3: 29 browser checks pass. A regression fixture with theme-owned, absolutely positioned cm-line::after pseudo-elements verifies that Lineage adds neither status text nor outlined pills to them. Status classes/side markers remain intact. Live Obsidian rendering still requires user verification.
+
+Version 0.3.4: 39 browser checks pass. Metadata fixtures verify compact Live Preview rendering, hidden encoded payload and block anchor, preserved scheduled dates and full Markdown, history button targeting before/after wording edits, stable display with cursor inside metadata, raw Source mode inspection, malformed-record visibility, and fenced-code exclusions. This uses real CodeMirror with a simulated Live Preview state field, not live Obsidian.
