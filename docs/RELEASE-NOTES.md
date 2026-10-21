@@ -1,9 +1,7 @@
-BuJo Lineage 0.3.4 makes migrated tasks readable while editing in Live Preview.
+BuJo Lineage 0.3.5 makes the scheduled date optional.
 
-Validated lineage metadata and its block anchor are replaced visually with a compact, tappable history button. Task wording, counts, previous/next links, and dates remain visible. Tap history to open the task history modal. Source mode retains the full raw comment and anchor. Existing notes need no rewriting; stored Markdown and history schema are unchanged. Malformed records remain visible for repair, and fenced examples are excluded.
+Schedule for later still suggests Future Log, marks the source [<], creates one open destination, increments the count, and records the transfer timestamp in history. Leave the date blank to rely on the Future Log location and move history. No scheduled field is added; any existing scheduled date is preserved. Choose a date to add or replace the single Tasks-compatible scheduled field. Due dates remain unchanged. A supplied invalid date still rejects the transfer before writing.
 
-Obsidian already provides code syntax highlighting. The former Code highlighting setting is renamed Code block color styling, is off by default for new installs, and only provides optional colors/spacing. Existing saved preferences are preserved: turn it off to use your theme's code styling. JetBrains Mono is independent.
+Update through BRAT and reload Obsidian. No settings or stored-history migration is required. Live Preview continues to show compact history metadata; Source mode retains the raw record.
 
-Update through BRAT and reload Obsidian. Use Live Preview for compact history display. Keep BuJo Bullets enabled for checkbox symbols.
-
-22 core/adapter tests and 39 browser checks pass, plus build, lint, and type checking. New checks cover unchanged Markdown, hidden metadata/anchor, preserved dates, Source mode, cursor behavior, history button targeting after edits, malformed records, and fenced code. Live Obsidian and iPhone verification remains necessary.
+25 core/adapter tests and 39 browser checks pass, plus type checking, lint, and build. New tests cover scheduling without a date, durable timestamp/count/references, existing-date preservation, replacement dates, and the actual vault adapter with a blank date. Live Obsidian/iPhone checks remain unverified.

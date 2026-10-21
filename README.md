@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.4.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.5.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.4.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.5.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -48,7 +48,7 @@ Capture `- [ ] ! Book car service #home`. Place the cursor on that parent line a
 
 The source becomes `[>]`; the new destination is `[ ]`. Counts progress **0 → 1 → 2**, and each successful transfer leaves one current open occurrence of that lineage. Renaming “Book car service” to “Call mechanic” does not create a new commitment. A recurrence instance is a separate commitment, so automatic transfer of recurring tasks is rejected in v1.
 
-**Schedule for later** uses the same flow with a required calendar date, suggests the configured Future Log, marks the source `[<]`, and gives the destination one `⏳ YYYY-MM-DD` field. Existing scheduled fields (`⏳` or `⌛`) are replaced on the destination; the source keeps its original date. Due dates are preserved. An ordinary migration preserves scheduled dates. **Moving to tomorrow's note does not set tomorrow as a due date.** Neither `[<]` nor a date creates notifications or reminders.
+**Schedule for later** uses the same flow with an optional calendar date, suggests the configured Future Log, marks the source `[<]`, and records the move timestamp in history. A blank date adds no scheduled field and preserves any existing scheduled date; Future Log plus the move history provides the context. Choosing a date gives the destination one `⏳ YYYY-MM-DD` field. Existing scheduled fields (`⏳` or `⌛`) are replaced on the destination; the source keeps its original date. Due dates are preserved. An ordinary migration preserves scheduled dates. **Moving to tomorrow's note does not set tomorrow as a due date.** Neither `[<]` nor a date creates notifications or reminders.
 
 **View task history** shows note paths, status symbols, action, timestamp, count, and optional reason, with an **Open occurrence** button for each row. Missing targets, duplicate anchors, broken reciprocal references, and conflicting successors are reported explicitly. Running a transfer command on an archived occurrence with a successor offers to open that successor or view history.
 

@@ -97,3 +97,18 @@ test('source child added during destination write stops archiving rather than dr
  const io={...f.io,update:async(path:string,fn:(s:string)=>string)=>{await f.io.update(path,fn);if(path==='Folder/B.md')f.files.set('Daily/A.md',p.expected+'\n  - [ ] New user subtask');}};
  await assert.rejects(new Engine([],io).run(p),/Source changed/);assert.match(f.files.get('Daily/A.md')!,/New user subtask/);assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,' ');
 });
+
+test('scheduling without a date records transfer context without inventing a scheduled field',async()=> {
+ const f=fixture();const p=plan(selected(f.files.get('Daily/A.md')!,0),'Daily/A.md','Future Log.md','schedule','later',undefined,link,'2026-10-21T18:00:00Z');
+ await new Engine([],f.io).run(p);
+ const source=tasks(f.files.get('Daily/A.md')!)[0],destination=tasks(f.files.get('Future Log.md')!)[0];
+ assert.equal(source.status,'<');assert.equal(destination.status,' ');assert.equal(destination.meta!.count,1);assert.equal(destination.meta!.timestamp,'2026-10-21T18:00:00Z');assert.doesNotMatch(destination.line,/⏳|undefined/);assert.equal(source.meta!.next,destination.block);
+});
+test('blank schedule date preserves existing dates; a supplied replacement remains singular',()=> {
+ const text='- [ ] Call mechanic ⏳ 2026-11-02 📅 2026-11-10';
+ for(const date of [undefined,'','   ']) {
+  const p=make(text,undefined,undefined,'schedule',date);
+  assert.match(p.destination,/⏳ 2026-11-02/);assert.match(p.destination,/📅 2026-11-10/);assert.equal((p.destination.match(/⏳/g)||[]).length,1);
+ }
+ const p=make(text,undefined,undefined,'schedule','2026-11-03');assert.match(p.destination,/⏳ 2026-11-03/);assert.equal((p.destination.match(/⏳/g)||[]).length,1);
+});

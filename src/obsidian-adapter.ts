@@ -150,7 +150,7 @@ class TransferModal extends Modal {
     const render=(filter:string)=> {list.empty(); const files=this.app.vault.getMarkdownFiles().filter(f=>f.path!==this.source && f.path.toLowerCase().includes(filter.toLowerCase())).slice(0,12);for(const f of files){const b=list.createEl('button',{text:f.path});b.onclick=()=>{destination=f.path;input.setValue(destination);list.empty();};}};
     let input:import('obsidian').TextComponent;
     new Setting(this.contentEl).setName('Destination note path / search').addText(t=> {input=t;t.setValue(destination).onChange(v=> {destination=v;render(v);});t.inputEl.setAttribute('aria-label','Destination note path or search');});
-    if(this.action==='schedule') new Setting(this.contentEl).setName('Scheduled date (required)').addText(t=> {t.inputEl.type='date';t.inputEl.setAttribute('aria-label','Scheduled calendar date');t.onChange(v=>date=v);});
+    if(this.action==='schedule') new Setting(this.contentEl).setName('Scheduled date (optional)').setDesc('Leave blank to keep the current date, or use Future Log with only the move timestamp.').addText(t=> {t.inputEl.type='date';t.inputEl.setAttribute('aria-label','Scheduled calendar date, optional');t.onChange(v=>date=v);});
     new Setting(this.contentEl).setName('Reason (optional)').addTextArea(t=>{t.inputEl.setAttribute('aria-label','Reason for transfer, optional');t.onChange(v=>reason=v);});
     const error=this.contentEl.createEl('p',{attr:{role:'alert'}});
     new Setting(this.contentEl).addButton(b=>b.setButtonText('Cancel').onClick(()=>{if(!running)this.close();})).addButton(b=>b.setButtonText('Transfer task').setCta().onClick(async()=> {

@@ -59,3 +59,8 @@ test('add-on entrypoint registers only lineage commands with an optional appeara
  assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','view-task-history']);
  assert.equal(renderers,1);
 });
+
+test('actual adapter schedules to Future Log with an empty date',async()=> {
+ const f=fixture();await f.controller.start();await f.controller.transfer('Daily/A.md',selected(f.files.get('Daily/A.md')!,0),'Future Log.md','schedule','later','');
+ assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,'<');const destination=tasks(f.files.get('Future Log.md')!)[0];assert.equal(destination.status,' ');assert.doesNotMatch(destination.line,/⏳|undefined/);assert.ok(destination.meta!.timestamp);
+});

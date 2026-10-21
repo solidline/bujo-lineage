@@ -46,3 +46,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 ## Compact metadata (0.3.4)
 
 Migrate a task, then edit its wording in Live Preview. The encoded HTML comment and block ID should be replaced visually by one history button; the count, previous/next navigation and Tasks dates should remain readable. Tap history from source and destination to confirm the correct task opens. Move the cursor through the line and edit adjacent text. Switch to Source mode to verify the unchanged comment and block anchor, then back to Live Preview. Verify copied/edited tasks retain IDs and that code examples and malformed comments are not silently hidden. In settings, Code block color styling is optional: Obsidian syntax highlighting continues with it off.
+
+## Optional scheduled date (0.3.5)
+
+Schedule a fresh task to Future Log with the date blank: source [<], destination [ ], count incremented, no new scheduled field, and move timestamp visible in history. Repeat with an existing scheduled date and leave blank: retain that field and any due date. Enter a replacement date: exactly one scheduled field should remain. A supplied invalid date must reject without mutations.

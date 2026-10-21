@@ -1,6 +1,6 @@
 {
   "name": "bujo-lineage",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Companion add-on for BuJo Bullets: task transfers, scheduling, and portable history.",
   "main": "main.js",
   "scripts": {

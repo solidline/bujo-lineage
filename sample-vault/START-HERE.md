@@ -8,4 +8,4 @@ Copy these files into a disposable vault root, install BuJo Lineage, and open `C
 
 Place the cursor on any of those task lines and run View task history. Previous/next anchors are real. The plugin does not need its data.json to reconstruct this history. Completion here is a plain Markdown status change, with no implied Tasks side effects.
 
-Try `Capture.md`: migrate to another note, then schedule to Future Log with a chosen date. Use a new destination so the finished sample stays easy to distinguish.
+Try `Capture.md`: migrate to another note, then schedule to Future Log with an optional date (leave it blank to rely on the move timestamp). Use a new destination so the finished sample stays easy to distinguish.

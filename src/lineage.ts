@@ -65,14 +65,15 @@ export function path(s: string): string {
 export interface Plan { operation: string; sourcePath: string; destinationPath: string; expected: string; source: string; destination: string; occurrence: string; sourceOccurrence: string; lineage: string; state: 'pending' | 'committed' }
 export function plan(t: Task, sourcePath: string, destinationPath: string, action: 'migrate'|'schedule', reason: string, date: string|undefined, link: (path: string, block: string, alias: string, from: string)=>string, now=new Date().toISOString()): Plan {
   validate(t); destinationPath=path(destinationPath); if(sourcePath===destinationPath) throw Error('Choose another note; same-note transfers are deferred.');
-  if(action==='schedule' && (!date || !validDate(date))) throw Error('Enter a valid scheduled date as YYYY-MM-DD.');
+  date=date?.trim() || undefined;
+  if(action==='schedule' && date && !validDate(date)) throw Error('Enter a valid scheduled date as YYYY-MM-DD.');
   const operation=id('op'), occurrence=id(), sourceOccurrence=t.block || id(), lineage=t.meta?.lineage || id('task');
   const original: Meta = t.meta || {v:1,lineage,occurrence:sourceOccurrence,count:0,action:'capture',timestamp:now,operation};
   const next: Meta={v:1,lineage,occurrence,count:original.count+1,previous:sourceOccurrence,action,timestamp:now,reason:reason || undefined,operation};
   const old: Meta={...original,next:occurrence,action,timestamp:now,reason:reason || undefined,operation};
   let base=t.line.replace(marker,'').replace(/ \^[A-Za-z0-9-]+\s*$/,'').replace(t.meta ? / · moved \d+ times?(?: · (?:\[\[[^\n]*?\]\]|\[[^\]]*\]\([^\n]*?\)))*/g : /(?!) /g,'').trimEnd();
   const sourceBase=base;
-  if(action==='schedule') base=scheduled(base,date!);
+  if(action==='schedule' && date) base=scheduled(base,date);
   function render(status: string, m: Meta, links: string): string { const {description,fields}=splitTasksSuffix(status===' '?base:sourceBase); return description.replace(/^(\s*(?:[-+*]|\d+[.)]) \[).(\])/, `$1${status}$2`)+` · moved ${m.count} ${m.count===1?'time':'times'} · ${links} ${encode(m)}${fields} ^${m.occurrence}`; }
   const links=[original.previous ? link('',original.previous,'previous',sourcePath):'',link(destinationPath,occurrence,'next',sourcePath)].filter(Boolean).join(' · ');
   return {operation,sourcePath,destinationPath,expected:t.raw,source:render(action==='schedule'?'<':'>',old,links),destination:render(' ',next,link(sourcePath,sourceOccurrence,'previous',destinationPath))+(t.children?'\n'+t.children:''),occurrence,sourceOccurrence,lineage,state:'pending'};
