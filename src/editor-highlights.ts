@@ -8,8 +8,13 @@ function highlights(view:EditorView):DecorationSet {
   for(const visible of view.visibleRanges) {
     for(let pos=visible.from;pos<=visible.to;) {
       const line=view.state.doc.lineAt(pos);
-      if(!seen.has(line.number) && /^\s*(?:[-+*]|\d+[.)]) \[.\] /.test(line.text)) {
+      const match=line.text.match(/^\s*(?:[-+*]|\d+[.)]) \[(.)\] /);
+      let context=syntaxTree(view.state).resolveInner(line.from+(match?.[0].length || 0),1);let isCode=false;
+      for(;;) {if(/code|comment|frontmatter/i.test(context.name))isCode=true;if(!context.parent)break;context=context.parent;}
+      if(!seen.has(line.number) && match && !isCode) {
         seen.add(line.number);
+        const status=({ ' ':'open', x:'done', '-':'cancelled', '>':'migrated', '<':'scheduled', o:'event' } as Record<string,string>)[match[1]];
+        if(status) ranges.push(Decoration.line({attributes:{class:'bujo-lineage-task bujo-lineage-status-'+status,'data-bujo-lineage-label':status}}).range(line.from));
         for(const token of journalTokens(line.text)) {
           const from=line.from+token.from,to=line.from+token.to;
           let node=syntaxTree(view.state).resolveInner(from,1);let code=false;

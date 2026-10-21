@@ -26,9 +26,12 @@ try {
   check(journalTokens('- [ ] ! Task <!-- ⏳ 2027-01-01 --> `📅 2027-01-02` ⏳ 2027-01-03').map(t=>t.kind).join(',')==='priority,scheduled','metadata and inline code excluded by tokenization');
   appearance.attach(document.body);appearance.apply({journalStyling:true,codeHighlighting:true});
   const editor=document.createElement('div');editor.className='markdown-source-view mod-cm6';root.append(editor);
-  const source='- [ ] ! Task ⏳ 2027-01-03\n\n```md\n- [ ] ! Example ⏳ 2027-01-03\n```';
+  const source='- [ ] ! Task ⏳ 2027-01-03\n- [x] Done\n- [-] Cancelled\n- [>] Moved\n- [<] Later\n- [o] Event\n\n```md\n- [ ] ! Example ⏳ 2027-01-03\n```';
   const view=new EditorView({state:EditorState.create({doc:source,extensions:[markdown(),journalHighlights]}),parent:editor});
   check(editor.querySelectorAll('.bujo-lineage-scheduled').length===1,'CodeMirror highlights task dates and excludes fenced examples');
+  check(editor.querySelectorAll('.bujo-lineage-task').length===6,'all six editor statuses receive explicit line decorations without host data-task attributes');
+  check(getComputedStyle(editor.querySelector('.bujo-lineage-status-open')!,'::after').content.includes('open'),'ordinary open tasks show a visible status label');
+  check(getComputedStyle(editor.querySelector('.bujo-lineage-status-done')!).borderInlineStartColor!==getComputedStyle(editor.querySelector('.bujo-lineage-status-migrated')!).borderInlineStartColor,'completed and migrated editor states have distinct colored markers');
   check(view.state.doc.toString()===source,'editor decorations never mutate Markdown');
   const before=getComputedStyle(root.querySelector('.bujo-lineage-scheduled')!).color;
   document.body.classList.add('theme-dark');const after=getComputedStyle(root.querySelector('.bujo-lineage-scheduled')!).color;

@@ -1,9 +1,7 @@
-BuJo Lineage 0.3.1 adds **Prefer JetBrains Mono** under Settings → BuJo Lineage → Appearance.
+BuJo Lineage 0.3.2 makes task styling visible in Live Preview even when Obsidian does not put data-task on the task line.
 
-The preference is enabled by default and applies to note text and code, independently of the journal and code color toggles. Disable it to restore your theme's fonts. Workspace navigation and UI fonts stay unchanged.
+With BuJo journal styling enabled, tasks now get colored side markers and short open/done/cancelled/migrated/scheduled/event labels. Checkbox theme variables and completed inner-text colors are styled explicitly. The editor supplies status decorations directly rather than relying on host attributes. Markdown, task identities, checkbox behavior, and clipboard text are unchanged.
 
-JetBrains Mono Regular is bundled locally, unmodified, under its SIL Open Font License 1.1. The font and license are embedded in styles.css so BRAT installs need no extra asset, separate font installation, network request, or font service. This includes iPhone use; actual iPhone font rendering still needs a device check.
+Update through BRAT, reload Obsidian, and check Settings → BuJo Lineage → Appearance → BuJo journal styling. Keep BuJo Bullets enabled for custom checkbox symbols. Migration counts and history links appear when you transfer tasks, not on ordinary capture tasks. JetBrains Mono and code highlighting remain independent preferences.
 
-Update through BRAT using solidline/bujo-lineage. Keep BuJo Bullets enabled alongside BuJo Lineage. The plugin ID and history schema are unchanged. Nothing is submitted to Obsidian's community plugin directory.
-
-Validation: 22 core/adapter tests and 25 browser checks pass, including bundled font loading, font toggle independence, CodeMirror fonts, theme font restoration, and unload cleanup. Build, lint, and type checking passed. Live Obsidian/iPhone and Tasks behavior remain untested.
+22 core/adapter tests and 28 Chromium browser checks pass, plus build, lint, and type checking. The new checks cover all six editor statuses without host data-task attributes and visible labels/colored markers. Live Obsidian and iPhone rendering remain unverified.

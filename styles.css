@@ -226,3 +226,44 @@ body.bujo-lineage-mono :is(.markdown-rendered, .markdown-source-view) {
 body.bujo-lineage-mono :is(.markdown-rendered code, .markdown-source-view .cm-scroller) {
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
+
+/* Explicit line decorations work even when Live Preview omits data-task on cm-line. */
+body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) {
+  --checkbox-color: var(--bl-open);
+  --checkbox-color-hover: var(--bl-open);
+  --checkbox-border-color: var(--bl-open);
+  --checkbox-border-color-hover: var(--bl-open);
+}
+body.bujo-lineage-journal .bujo-lineage-task {
+  --bl-status: var(--bl-open);
+  border-inline-start: 3px solid var(--bl-status);
+  padding-inline-start: 0.65em;
+}
+body.bujo-lineage-journal .bujo-lineage-status-done { --bl-status: var(--bl-done); color: var(--bl-done); }
+body.bujo-lineage-journal .bujo-lineage-status-cancelled { --bl-status: var(--bl-muted); color: var(--bl-muted); }
+body.bujo-lineage-journal .bujo-lineage-status-migrated { --bl-status: var(--bl-migrate); color: var(--bl-migrate); text-decoration: none; }
+body.bujo-lineage-journal .bujo-lineage-status-scheduled { --bl-status: var(--bl-schedule); color: var(--bl-schedule); text-decoration: none; }
+body.bujo-lineage-journal .bujo-lineage-status-event { --bl-status: var(--bl-event); color: var(--bl-event); text-decoration: none; }
+/* Obsidian sets explicit colors on completed inner spans, not only the task line. */
+body.bujo-lineage-journal .bujo-lineage-status-done :is(.cm-strikethrough, .cm-hmd-internal-link, a.internal-link) { color: var(--bl-done); }
+body.bujo-lineage-journal .bujo-lineage-task input.task-list-item-checkbox {
+  --checkbox-color: var(--bl-status);
+  --checkbox-border-color: var(--bl-status);
+  border-color: var(--bl-status);
+}
+/* Short labels are visual only. They never become Markdown or clipboard text. */
+body.bujo-lineage-journal .bujo-lineage-task::after {
+  content: attr(data-bujo-lineage-label);
+  display: inline-block;
+  color: var(--bl-status);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font: 500 0.68em/1.4 var(--font-interface, system-ui, sans-serif);
+  letter-spacing: 0.03em;
+  margin-inline-start: 0.8em;
+  padding: 0.05em 0.5em;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+body.bujo-lineage-journal .bujo-lineage-status-open { color: var(--text-normal, inherit); }
