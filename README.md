@@ -4,6 +4,14 @@ A local, mobile-compatible Obsidian Bullet Journal plugin. Capture a task in you
 
 Forked from **BuJo Bullets by Will Olson**, upstream commit `46eb512ed8d5909c54b576e67130ef12eccbed70`. The original MIT [LICENSE](LICENSE) is unchanged; see [attribution and changes](UPSTREAM.md).
 
+## Install from GitHub
+
+Repository: [solidline/obsidian-bujo-bullets](https://github.com/solidline/obsidian-bujo-bullets). This fork's plugin name is **BuJo Lineage**, ID `bujo-lineage`.
+
+With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/obsidian-bujo-bullets`, and add it. Disable original BuJo Bullets and enable **BuJo Lineage** in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
+
+For manual installation, download `bujo-lineage-0.1.0.zip` from the [latest release](https://github.com/solidline/obsidian-bujo-bullets/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This fork has not been submitted to Obsidian's community plugin directory.
+
 ## Install the built version
 
 1. Download and extract `bujo-lineage-0.1.0.zip`, or copy `dist/bujo-lineage/` from this repository.

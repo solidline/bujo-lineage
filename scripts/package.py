@@ -13,7 +13,7 @@ for name in ['docs','sample-vault']:
 with zipfile.ZipFile(out/f'bujo-lineage-{version}.zip','w',zipfile.ZIP_DEFLATED) as z:
     for p in sorted(plugin.rglob('*')):
         if p.is_file():z.write(p,p.relative_to(out))
-allowed={'src','tests','scripts','docs','sample-vault'}
+allowed={'.github','src','tests','scripts','docs','sample-vault'}
 files={'README.md','LICENSE','UPSTREAM.md','package.json','package-lock.json','manifest.json','styles.css','tsconfig.json','esbuild.config.mjs','version-bump.mjs','versions.json','.eslintrc','.gitignore','CHANGELOG.md'}
 with zipfile.ZipFile(out/f'bujo-lineage-source-{version}.zip','w',zipfile.ZIP_DEFLATED) as z:
     for p in sorted(root.rglob('*')):
