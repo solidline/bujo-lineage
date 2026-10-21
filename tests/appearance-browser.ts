@@ -5,6 +5,7 @@ import {EditorState} from '@codemirror/state';
 import {markdown} from '@codemirror/lang-markdown';
 const results:string[]=[];
 function check(ok:unknown,message:string) {if(!ok)throw Error(message);results.push(message);}
+(async()=>{
 try {
   const appearance=new Appearance(document.body,{journalStyling:true,codeHighlighting:false});
   check(document.body.classList.contains('bujo-lineage-journal')&&!document.body.classList.contains('bujo-lineage-code'),'journal and code toggles are independent');
@@ -38,6 +39,18 @@ try {
   appearance.apply({journalStyling:false,codeHighlighting:false});
   check(getComputedStyle(code).overflowX!=='auto','disabling code styling restores the theme layout');
   check(getComputedStyle(checkbox).width!=='44px','disabling journal styling restores theme checkbox size');
+  const themeFont=getComputedStyle(root).fontFamily;
+  appearance.apply({journalStyling:false,codeHighlighting:false,preferJetBrainsMono:true});
+  check(getComputedStyle(root).fontFamily.startsWith('"JetBrains Mono"'),'JetBrains Mono preference applies independently to notes');
+  check(getComputedStyle(editor.querySelector('.cm-scroller')!).fontFamily.startsWith('"JetBrains Mono"'),'font preference applies to CodeMirror');
+  const loaded=await document.fonts.load('16px "JetBrains Mono"');
+  check(loaded.some(face=>face.family==='JetBrains Mono' && face.status==='loaded'),'bundled font loads without a font installation or external request');
+  appearance.apply({journalStyling:false,codeHighlighting:false,preferJetBrainsMono:false});
+  check(getComputedStyle(root).fontFamily===themeFont,'disabling font preference restores theme font');
+  appearance.apply({journalStyling:false,codeHighlighting:false,preferJetBrainsMono:true});
   view.destroy();appearance.clear();
+  check(!document.body.classList.contains('bujo-lineage-mono'),'unload removes font preference class');
   document.getElementById('results')!.textContent='PASS '+results.length+' browser checks\n'+results.join('\n');
 } catch(error) {document.getElementById('results')!.textContent='FAIL '+String(error)+'\n'+results.join('\n');}
+
+})();

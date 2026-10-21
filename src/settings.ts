@@ -2,6 +2,7 @@ import type BuJoLineagePlugin from './index';
 import { App, PluginSettingTab, Setting } from 'obsidian';
 
 export interface BuJoPluginSettings {
+  preferJetBrainsMono: boolean;
   journalStyling: boolean;
   codeHighlighting: boolean;
   dailyFolder: string;
@@ -10,6 +11,7 @@ export interface BuJoPluginSettings {
 }
 
 export const DEFAULT_SETTINGS: BuJoPluginSettings = {
+  preferJetBrainsMono: true,
   journalStyling: true,
   codeHighlighting: true,
   dailyFolder: '',
@@ -24,6 +26,7 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
     this.containerEl.empty();
     new Setting(this.containerEl).setName('Appearance').setHeading();
     for (const [key, name, description] of [
+      ['preferJetBrainsMono', 'Prefer JetBrains Mono', 'Use bundled JetBrains Mono for note text and code, including on iPhone. Turn off to use your theme fonts.'],
       ['journalStyling', 'BuJo journal styling', 'Quiet light/dark task colors, dates, signifiers, history links, and larger mobile checkbox controls.'],
       ['codeHighlighting', 'Code highlighting', 'Coordinated syntax colors and scrollable code blocks. Fenced code needs a language label.'],
     ] as const) {

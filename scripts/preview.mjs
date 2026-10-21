@@ -7,6 +7,7 @@ try {
   const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   await page.setContent(html);
   if(dark)await page.locator('body').evaluate(body=>body.classList.add('theme-dark'));
+  await page.evaluate(()=>document.fonts.ready);
   await page.screenshot({path:'docs/appearance-'+(dark?'dark':'light')+'.png',fullPage:true});
   await page.close();
  }

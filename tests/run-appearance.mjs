@@ -13,6 +13,7 @@ try {
  try {
    const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
    await page.setContent(html,{waitUntil:'domcontentloaded',timeout:20000});
+   await page.waitForFunction(()=>/^(PASS|FAIL)/.test(document.getElementById('results')?.textContent || ''),{},{timeout:10000});
    const report=await page.locator('#results').textContent();
    if(!report?.startsWith('PASS')) {console.error(report);process.exitCode=1;} else console.log(report);
  } finally {await browser.close();}

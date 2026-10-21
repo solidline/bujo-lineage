@@ -40,3 +40,5 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 3. On iPhone, tap all six checkbox states and navigate history links. Confirm 44px controls do not overlap neighboring task text or child bullets. Test narrow portrait and landscape; turn journal styling off if a theme's layout conflicts.
 4. Create fenced python/javascript/json blocks with comments, strings, numbers, and long lines. Check readable light/dark colors, code copy buttons, horizontal scrolling, selection, and editing. Confirm an unknown language stays plain text.
 5. In a desktop popout, toggle appearance, switch modes, close the popout, then unload the plugin. No Lineage body classes should remain. Highlighting must never change Markdown, identity comments, Tasks fields, or block anchors.
+
+6. Toggle Prefer JetBrains Mono with both color toggles off. Confirm note text, Live Preview/Source mode, inline code and fenced code use the bundled font while sidebar/UI fonts remain unchanged. Disable it to restore theme fonts. Repeat offline on iPhone; check fallback emoji and non-Latin glyphs, popout windows, and plugin unload.

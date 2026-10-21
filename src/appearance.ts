@@ -1,21 +1,23 @@
 /** Appearance changes are transient DOM/classes only; Markdown stays untouched. */
-export interface AppearanceSettings { journalStyling: boolean; codeHighlighting: boolean }
+export interface AppearanceSettings { journalStyling: boolean; codeHighlighting: boolean; preferJetBrainsMono?: boolean }
 const journalClass='bujo-lineage-journal';
 const codeClass='bujo-lineage-code';
+const fontClass='bujo-lineage-mono';
 export class Appearance {
   private bodies=new Set<HTMLElement>();
   private settings:AppearanceSettings;
   constructor(body:HTMLElement, settings:AppearanceSettings) {this.settings=settings;this.attach(body);}
   attach(body:HTMLElement) {this.bodies.add(body);this.apply(this.settings);}
-  detach(body:HTMLElement) {body.classList.remove(journalClass,codeClass);this.bodies.delete(body);}
+  detach(body:HTMLElement) {body.classList.remove(journalClass,codeClass,fontClass);this.bodies.delete(body);}
   apply(settings:AppearanceSettings) {
     this.settings=settings;
     for(const body of this.bodies) {
       body.classList.toggle(journalClass,settings.journalStyling);
       body.classList.toggle(codeClass,settings.codeHighlighting);
+      body.classList.toggle(fontClass,settings.preferJetBrainsMono===true);
     }
   }
-  clear() {for(const body of this.bodies)body.classList.remove(journalClass,codeClass);this.bodies.clear();}
+  clear() {for(const body of this.bodies)body.classList.remove(journalClass,codeClass,fontClass);this.bodies.clear();}
 }
 export interface Token {from:number;to:number;kind:'priority'|'question'|'scheduled'|'due'|'count'}
 export function journalTokens(text:string):Token[] {

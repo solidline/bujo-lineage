@@ -1,9 +1,9 @@
-BuJo Lineage 0.3.0 adds **optional journal styling and code highlighting** inside the existing companion add-on.
+BuJo Lineage 0.3.1 adds **Prefer JetBrains Mono** under Settings → BuJo Lineage → Appearance.
 
-In Settings → BuJo Lineage → Appearance, toggle **BuJo journal styling** and **Code highlighting** independently. Both are enabled by default and follow Obsidian's light/dark mode. Journal styling adds restrained task-state colors, priority/question and date accents, quiet history links, comfortable spacing, and 44px checkbox targets on touch devices. Code blocks use coordinated syntax colors and horizontal scrolling; fenced code needs a language label.
+The preference is enabled by default and applies to note text and code, independently of the journal and code color toggles. Disable it to restore your theme's fonts. Workspace navigation and UI fonts stay unchanged.
 
-Keep **BuJo Bullets and BuJo Lineage enabled together**. BuJo Bullets retains symbols, signifier configuration, and status commands. No Markdown, lineage identities, or stored history is changed by styling. Turn off either toggle to restore that part of your active theme.
+JetBrains Mono Regular is bundled locally, unmodified, under its SIL Open Font License 1.1. The font and license are embedded in styles.css so BRAT installs need no extra asset, separate font installation, network request, or font service. This includes iPhone use; actual iPhone font rendering still needs a device check.
 
-Update with BRAT from solidline/bujo-lineage, or extract bujo-lineage-0.3.0.zip into <vault>/.obsidian/plugins/. The plugin ID and history schema are unchanged. Direct main.js, manifest.json, and styles.css assets are included. Nothing has been submitted to Obsidian's community plugin directory.
+Update through BRAT using solidline/bujo-lineage. Keep BuJo Bullets enabled alongside BuJo Lineage. The plugin ID and history schema are unchanged. Nothing is submitted to Obsidian's community plugin directory.
 
-Validation: 22 core/adapter tests plus 20 Chromium appearance checks passed, along with type checking, lint, and production build. Browser checks cover DOM/text preservation, link handlers, independent toggles, light/dark mode, actual CodeMirror fenced-code exclusions, 44px touch targets, and code scrolling at phone width. Representative browser previews are included in docs. Live Obsidian/iPhone, third-party theme combinations, and Tasks editing remain unverified; see docs/MANUAL-CHECKS.md.
+Validation: 22 core/adapter tests and 25 browser checks pass, including bundled font loading, font toggle independence, CodeMirror fonts, theme font restoration, and unload cleanup. Build, lint, and type checking passed. Live Obsidian/iPhone and Tasks behavior remain untested.

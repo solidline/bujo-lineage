@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.0.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.1.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.0.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.1.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -30,12 +30,13 @@ The repository is now `solidline/bujo-lineage`. If BRAT still tracks the old `so
 
 ## Optional journal and code appearance (0.3.0)
 
-In **Settings → BuJo Lineage → Appearance**, use two independent toggles, both enabled by default:
+In **Settings → BuJo Lineage → Appearance**, use independent toggles, all enabled by default:
 
+- **Prefer JetBrains Mono**: bundled JetBrains Mono Regular for note text and code. Works offline without a separate font installation, including on iPhone. Disable it to restore theme fonts. It leaves workspace navigation and UI fonts alone.
 - **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices receive 44-pixel checkbox targets. Status symbols and text remain meaningful without color.
 - **Code highlighting**: coordinated syntax colors using Obsidian's existing language parsers and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
 
-Both follow Obsidian's light/dark mode and leave your theme's workspace panels, note fonts, and note backgrounds intact. Turn either off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
+The color styles follow Obsidian's light/dark mode and leave workspace panels and note backgrounds intact. The font preference is independent of both color toggles. Turn a toggle off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
 
 Highlighting works in rendered notes and in the CodeMirror editor. Task decorations exclude code/comment/frontmatter syntax nodes; they do not change Markdown, metadata, selection, checkbox behavior, or navigation handlers. No vault scan is needed for highlighting: editor decorations use visible ranges. Turning off styling removes colors immediately; unloading removes the body classes, including popout windows. Themes with unusually strong CSS overrides may require switching off one appearance toggle.
 
@@ -190,3 +191,5 @@ Node 18+ is recommended (validated here with Node 24.19.0 / npm 11.9.0). Python 
 Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its symbols, signifiers, and manual status commands. `appearance.ts` manages temporary styling classes and reading-view spans; `editor-highlights.ts` adds viewport-only CodeMirror decorations. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
 
 Deferred: bulk migration, automatic daily rollover, heading/template placement, calendars, dashboards, dependency-safe transfer, same-note migrations, recurrence transfer and automatic conflict merging. Very large vaults can make explicit rebuilds slower; no background service is involved.
+
+JetBrains Mono is copyright The JetBrains Mono Project Authors and is bundled unmodified under the SIL Open Font License 1.1. See [font attribution and license](docs/fonts/OFL.txt). Its font data and license are embedded in styles.css for BRAT installations; no remote font service is used.
