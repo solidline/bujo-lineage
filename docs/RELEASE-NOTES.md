@@ -1,7 +1,7 @@
-BuJo Lineage 0.3.2 makes task styling visible in Live Preview even when Obsidian does not put data-task on the task line.
+BuJo Lineage 0.3.3 fixes overlapping status text and extra empty pill outlines in Live Preview.
 
-With BuJo journal styling enabled, tasks now get colored side markers and short open/done/cancelled/migrated/scheduled/event labels. Checkbox theme variables and completed inner-text colors are styled explicitly. The editor supplies status decorations directly rather than relying on host attributes. Markdown, task identities, checkbox behavior, and clipboard text are unchanged.
+The experimental status badges are removed. They used task-line pseudo-elements whose positioning can be controlled by Obsidian or a theme, causing labels to overlap text. Colored side markers, checkbox accents, syntax highlighting, and the JetBrains Mono preference remain. BuJo Bullets continues to supply checkbox status symbols.
 
-Update through BRAT, reload Obsidian, and check Settings → BuJo Lineage → Appearance → BuJo journal styling. Keep BuJo Bullets enabled for custom checkbox symbols. Migration counts and history links appear when you transfer tasks, not on ordinary capture tasks. JetBrains Mono and code highlighting remain independent preferences.
+Update through BRAT and reload Obsidian. Keep BuJo journal styling enabled. No task text, identities, dates, or history is changed.
 
-22 core/adapter tests and 28 Chromium browser checks pass, plus build, lint, and type checking. The new checks cover all six editor statuses without host data-task attributes and visible labels/colored markers. Live Obsidian and iPhone rendering remain unverified.
+22 core/adapter tests and 29 Chromium checks pass, plus build, lint, and type checking. Regression checks emulate a theme's absolutely positioned task-line pseudo-elements and verify that no status label or empty pill border is added. Live Obsidian/iPhone rendering remains unverified.

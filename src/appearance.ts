@@ -38,7 +38,7 @@ export function decorateJournal(element:HTMLElement):void {
   const doc=element.ownerDocument;
   for(const task of Array.from(element.querySelectorAll<HTMLElement>('.task-list-item'))) {
     const status=({ '':'open', ' ':'open', x:'done', '-':'cancelled', '>':'migrated', '<':'scheduled', o:'event' } as Record<string,string>)[task.dataset.task || ''];
-    if(status) {task.classList.add('bujo-lineage-task','bujo-lineage-status-'+status);task.dataset.bujoLineageLabel=status;}
+    if(status) {task.classList.add('bujo-lineage-task','bujo-lineage-status-'+status);}
     const walker=doc.createTreeWalker(task,4 /* SHOW_TEXT */); const nodes:Text[]=[];
     let node:Node|null;
     while((node=walker.nextNode())) {

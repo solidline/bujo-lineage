@@ -7,7 +7,7 @@ const dir=mkdtempSync(resolve(tmpdir(),'bujo-appearance-'));
 try {
  const js=resolve(dir,'test.js');
  await build({entryPoints:['tests/appearance-browser.ts'],outfile:js,bundle:true,platform:'browser',format:'iife'});
- const html=`<!doctype html><meta charset="utf-8"><style>body{width:330px;margin:16px;background:#fff;color:#222}input{width:20px;height:20px}.markdown-rendered pre{width:280px}code{font:14px monospace}${readFileSync('styles.css','utf8')}</style>
+ const html=`<!doctype html><meta charset="utf-8"><style>body{width:330px;margin:16px;background:#fff;color:#222}input{width:20px;height:20px}.cm-line::after{content:"";position:absolute;right:0}.markdown-rendered pre{width:280px}code{font:14px monospace}${readFileSync('styles.css','utf8')}</style>
  <div id="fixture" class="markdown-rendered"><ul><li class="task-list-item" data-task=" "><input class="task-list-item-checkbox" type="checkbox"> ! Parent ⏳ 2027-01-03 <a class="internal-link" href="#">previous</a> · moved 1 time <code>📅 2027-01-02</code><ul><li class="task-list-item" data-task=" ">? Child</li></ul></li></ul><pre><code><span class="token keyword">const</span> message = "${'a'.repeat(140)}";</code></pre></div><pre id="results"></pre><script>${readFileSync(js,'utf8')}</script>`;
  const browser=await chromium.launch({executablePath:process.env.BUJO_CHROMIUM || (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : chromium.executablePath()),headless:true,args:['--no-sandbox'],timeout:20000});
  try {

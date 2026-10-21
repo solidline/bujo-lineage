@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.2.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.3.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.2.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.3.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -196,4 +196,4 @@ JetBrains Mono is copyright The JetBrains Mono Project Authors and is bundled un
 
 ### Seeing only standard checkboxes?
 
-Update to 0.3.2 or newer through BRAT, reload Obsidian, and enable **BuJo journal styling** in BuJo Lineage settings. Tasks now have explicit colored side markers and short open/done/cancelled/migrated/scheduled/event labels in the editor and rendered notes. Live Preview no longer needs a data-task attribute on the task line for these styles. Keep BuJo Bullets enabled for its custom checkbox symbols. Migration counts and previous/next links are created by transferring a task; they do not appear automatically on ordinary capture tasks.
+Update to 0.3.3 or newer through BRAT, reload Obsidian, and enable **BuJo journal styling** in BuJo Lineage settings. Tasks have explicit colored side markers and checkbox accents in the editor and rendered notes. Status symbols remain provided by BuJo Bullets. Version 0.3.3 removes the experimental inline status pills because they could overlap text in Live Preview themes. Live Preview no longer needs a data-task attribute on the task line for these styles. Keep BuJo Bullets enabled for its custom checkbox symbols. Migration counts and previous/next links are created by transferring a task; they do not appear automatically on ordinary capture tasks.

@@ -14,7 +14,7 @@ function highlights(view:EditorView):DecorationSet {
       if(!seen.has(line.number) && match && !isCode) {
         seen.add(line.number);
         const status=({ ' ':'open', x:'done', '-':'cancelled', '>':'migrated', '<':'scheduled', o:'event' } as Record<string,string>)[match[1]];
-        if(status) ranges.push(Decoration.line({attributes:{class:'bujo-lineage-task bujo-lineage-status-'+status,'data-bujo-lineage-label':status}}).range(line.from));
+        if(status) ranges.push(Decoration.line({attributes:{class:'bujo-lineage-task bujo-lineage-status-'+status}}).range(line.from));
         for(const token of journalTokens(line.text)) {
           const from=line.from+token.from,to=line.from+token.to;
           let node=syntaxTree(view.state).resolveInner(from,1);let code=false;

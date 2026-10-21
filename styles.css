@@ -251,19 +251,6 @@ body.bujo-lineage-journal .bujo-lineage-task input.task-list-item-checkbox {
   --checkbox-border-color: var(--bl-status);
   border-color: var(--bl-status);
 }
-/* Short labels are visual only. They never become Markdown or clipboard text. */
-body.bujo-lineage-journal .bujo-lineage-task::after {
-  content: attr(data-bujo-lineage-label);
-  display: inline-block;
-  color: var(--bl-status);
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  font: 500 0.68em/1.4 var(--font-interface, system-ui, sans-serif);
-  letter-spacing: 0.03em;
-  margin-inline-start: 0.8em;
-  padding: 0.05em 0.5em;
-  vertical-align: middle;
-  text-decoration: none;
-}
+/* Do not use task-line pseudo-elements: Live Preview/themes own their layout. */
 
 body.bujo-lineage-journal .bujo-lineage-status-open { color: var(--text-normal, inherit); }

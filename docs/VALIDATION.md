@@ -27,3 +27,5 @@ Version 0.3.0: `npm run test:appearance` passed **20 headless Chromium checks** 
 Version 0.3.1: the browser suite now passes **25 checks**, including bundled JetBrains Mono loading, font preference independent of color toggles, CodeMirror font application, restoring the theme font, and unloading the font class. Real iPhone font rendering remains untested.
 
 Version 0.3.2: 28 Chromium checks pass, including all six explicit editor-line status decorations without host data-task attributes, visible open labels, and distinct done/migrated side markers. This tests the reported selector mismatch using real CodeMirror fixtures, not a live Obsidian app.
+
+Version 0.3.3: 29 browser checks pass. A regression fixture with theme-owned, absolutely positioned cm-line::after pseudo-elements verifies that Lineage adds neither status text nor outlined pills to them. Status classes/side markers remain intact. Live Obsidian rendering still requires user verification.
