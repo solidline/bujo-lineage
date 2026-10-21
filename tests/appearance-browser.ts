@@ -34,7 +34,8 @@ try {
   check(editor.querySelectorAll('.bujo-lineage-task').length===6,'all six editor statuses receive explicit line decorations without host data-task attributes');
   check(getComputedStyle(editor.querySelector('.bujo-lineage-status-open')!,'::after').content==='""','theme-owned line pseudo-elements do not receive overlapping status text');
   check(getComputedStyle(editor.querySelector('.bujo-lineage-status-open')!,'::after').borderRightWidth==='0px','theme-owned line pseudo-elements do not become empty outlined pills');
-  check(getComputedStyle(editor.querySelector('.bujo-lineage-status-done')!).boxShadow!==getComputedStyle(editor.querySelector('.bujo-lineage-status-migrated')!).boxShadow,'completed and migrated editor states have distinct colored markers');
+  check(getComputedStyle(editor.querySelector('.bujo-lineage-status-done')!).color!==getComputedStyle(editor.querySelector('.bujo-lineage-status-migrated')!).color,'completed and migrated tasks retain distinct text colors');
+  check(getComputedStyle(editor.querySelector('.bujo-lineage-task')!).boxShadow==='none','tasks have no vertical status stripe');
   check(view.state.doc.toString()===source,'editor decorations never mutate Markdown');
   const before=getComputedStyle(root.querySelector('.bujo-lineage-scheduled')!).color;
   document.body.classList.add('theme-dark');const after=getComputedStyle(root.querySelector('.bujo-lineage-scheduled')!).color;

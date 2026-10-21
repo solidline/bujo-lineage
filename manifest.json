@@ -1,7 +1,7 @@
 {
   "id": "bujo-lineage",
   "name": "BuJo Lineage",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "minAppVersion": "1.8.0",
   "description": "Companion add-on for BuJo Bullets: task transfers, scheduling, and portable history.",
   "author": "BuJo Lineage contributors",

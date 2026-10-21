@@ -35,3 +35,5 @@ Version 0.3.4: 39 browser checks pass. Metadata fixtures verify compact Live Pre
 Version 0.3.5: 25 core/adapter tests (17 core, 8 adapter) and 39 browser checks pass. Optional-date scheduling tests cover a fresh task moved to Future Log without a date, persisted transfer timestamp/count/reciprocal references, existing scheduled/due-date preservation for empty or whitespace dates, replacement dates, and a blank date through the actual adapter. Supplied invalid-date rejection remains covered.
 
 Version 0.3.6: 25 core/adapter tests and 44 browser checks pass. New mobile fixtures verify 22px checkbox sizing, preserved theme checkbox margins/list padding, preserved CodeMirror theme hanging indentation, non-repeating glyph masks, and compact 32px history controls. Side markers no longer consume layout width. Browser previews were regenerated; actual iPhone rendering remains unverified.
+
+Version 0.3.7 removes the vertical status stripe. The browser suite now passes 45 checks, including stripe absence and preserved done/migrated text colors. All 25 core/adapter tests, build, lint, and type checking pass.

@@ -244,7 +244,6 @@ body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) {
 }
 body.bujo-lineage-journal .bujo-lineage-task {
   --bl-status: var(--bl-open);
-  box-shadow: inset 2px 0 var(--bl-status);
 }
 body.bujo-lineage-journal .bujo-lineage-status-done { --bl-status: var(--bl-done); color: var(--bl-done); }
 body.bujo-lineage-journal .bujo-lineage-status-cancelled { --bl-status: var(--bl-muted); color: var(--bl-muted); }
