@@ -10,13 +10,13 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.2.0.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.0.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.2.0.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.0.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
-3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds only migration, scheduling, history, and recovery; it does not duplicate those features.
+3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
 5. On iPhone, open Settings → Mobile → Manage toolbar options (wording can vary by Obsidian version). Add **BuJo Lineage: Migrate task** and **BuJo Lineage: Schedule for later**. Optionally add **View task history**. Place the cursor on the task line before running a command.
 
@@ -27,6 +27,19 @@ The plugin uses Obsidian/browser APIs only and declares `isDesktopOnly: false`. 
 Version 0.2.0 changes BuJo Lineage from a replacement to a companion add-on. Keep the same plugin ID and folder (`bujo-lineage`) so existing settings, pending operations, and Markdown identities survive the update. **Re-enable BuJo Bullets** for its checkbox styling, signifiers, and status commands. Legacy signifier settings in BuJo Lineage data are left untouched but no longer used; configure signifiers in BuJo Bullets. Transfer/history schema v1 is unchanged.
 
 The repository is now `solidline/bujo-lineage`. If BRAT still tracks the old `solidline/obsidian-bujo-bullets` URL, use the new URL for future installations. GitHub normally redirects the old URL. No community-directory submission is involved.
+
+## Optional journal and code appearance (0.3.0)
+
+In **Settings → BuJo Lineage → Appearance**, use two independent toggles, both enabled by default:
+
+- **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices receive 44-pixel checkbox targets. Status symbols and text remain meaningful without color.
+- **Code highlighting**: coordinated syntax colors using Obsidian's existing language parsers and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
+
+Both follow Obsidian's light/dark mode and leave your theme's workspace panels, note fonts, and note backgrounds intact. Turn either off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
+
+Highlighting works in rendered notes and in the CodeMirror editor. Task decorations exclude code/comment/frontmatter syntax nodes; they do not change Markdown, metadata, selection, checkbox behavior, or navigation handlers. No vault scan is needed for highlighting: editor decorations use visible ranges. Turning off styling removes colors immediately; unloading removes the body classes, including popout windows. Themes with unusually strong CSS overrides may require switching off one appearance toggle.
+
+See [light preview](docs/appearance-light.png), [dark preview](docs/appearance-dark.png), or [the standalone preview](docs/appearance-preview.html). These are representative browser renders, not live Obsidian screenshots. Actual iPhone/Obsidian appearance and third-party theme combinations still need the manual checklist.
 
 ## Everyday use
 
@@ -50,14 +63,14 @@ BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the manual
 | `- [o]` | Event |
 | `- Some note` | Ordinary note, not a checkbox task |
 
-Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage does not register status commands, modify BuJo Bullets settings, or restyle journal checkboxes.
+Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage does not register status commands or modify BuJo Bullets settings. Its optional appearance layer adds colors, spacing, and touch sizing without changing the status symbols.
 
 ## Settings and destination rules
 
 - **Daily note folder**: empty means vault root. Set it to match your core Daily Notes folder.
 - **Daily filename format**: Moment format, default `YYYY-MM-DD`; match your Daily Notes filename format. Tomorrow is computed with local calendar-day arithmetic, not by adding 24 hours, so daylight saving changes are respected. Invalid proposed paths leave the destination blank for manual entry.
 - **Future Log path**: default `Future Log.md`.
-Signifiers and checkbox appearance are configured in BuJo Bullets, not in this add-on.
+BuJo Bullets configures symbols and signifier meanings. BuJo Lineage optionally adds the appearance layer below.
 
 Core Daily Notes configuration is not exposed through the documented public plugin API. This version deliberately uses the small explicit folder/format fallback rather than private core-plugin properties, and needs no other daily-note plugin. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
 
@@ -167,12 +180,13 @@ npm ci
 npm run typecheck
 npm test
 npm run lint
+npm run test:appearance  # requires Chromium; see below
 npm run build
 python3 scripts/package.py
 ```
 
-Node 18+ is recommended (validated here with Node 24.19.0 / npm 11.9.0). Python 3 is only needed for packaging. The lockfile is committed. Runtime has no third-party dependency. `npm run dev` runs the upstream esbuild watch workflow. See [validation results](docs/VALIDATION.md).
+Node 18+ is recommended (validated here with Node 24.19.0 / npm 11.9.0). Python 3 is only needed for packaging. The lockfile is committed. Runtime uses only Obsidian and its provided CodeMirror modules; no Node or server imports are shipped. `npm run dev` runs the upstream esbuild watch workflow. For browser checks, install Chromium locally, set `BUJO_CHROMIUM` to its executable, or run `npx playwright-core install chromium` and use the downloaded browser. Playwright and Markdown language test fixtures are development-only dependencies. See [validation results](docs/VALIDATION.md).
 
-Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its rendering, signifiers, and manual status commands. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
+Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its symbols, signifiers, and manual status commands. `appearance.ts` manages temporary styling classes and reading-view spans; `editor-highlights.ts` adds viewport-only CodeMirror decorations. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
 
 Deferred: bulk migration, automatic daily rollover, heading/template placement, calendars, dashboards, dependency-safe transfer, same-note migrations, recurrence transfer and automatic conflict merging. Very large vaults can make explicit rebuilds slower; no background service is involved.

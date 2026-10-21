@@ -31,3 +31,12 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 5. Use Tasks' completion command or checkbox interaction on the current occurrence. Verify expected Tasks done-date behavior and unchanged metadata and anchor. Run a Tasks query with `not done`: archived NON_TASK rows must be absent. Query `status.type is DONE`: only actual completions should appear. A broad query may include NON_TASK rows; that is expected.
 6. Attempt to migrate tasks with `🆔 abc123`, `⛔ abc123`, and `🔁 every week` separately. Confirm clear rejection and no task changes or reserved operation writes.
 7. If Tasks strips or moves the comment/anchor incorrectly, stop using its edit modal on lineaged tasks in that version. Preserve a backup and report the exact before/after source. This release claims syntax-level compatibility, not a passed Tasks runtime guarantee.
+
+
+## Appearance (0.3.0)
+
+1. Keep BuJo Bullets enabled. In BuJo Lineage settings, toggle journal styling and code highlighting independently. Confirm disabling both restores your theme's appearance without changing note text.
+2. Switch between light and dark mode. Check open/x/-/>/</o task states, leading ! and ?, tags, due/scheduled dates, count text, previous/next links, nested lists, and a task containing inline code. Repeat in Reading View, Live Preview, and Source mode; verify fenced task examples are not decorated as real journal tasks.
+3. On iPhone, tap all six checkbox states and navigate history links. Confirm 44px controls do not overlap neighboring task text or child bullets. Test narrow portrait and landscape; turn journal styling off if a theme's layout conflicts.
+4. Create fenced python/javascript/json blocks with comments, strings, numbers, and long lines. Check readable light/dark colors, code copy buttons, horizontal scrolling, selection, and editing. Confirm an unknown language stays plain text.
+5. In a desktop popout, toggle appearance, switch modes, close the popout, then unload the plugin. No Lineage body classes should remain. Highlighting must never change Markdown, identity comments, Tasks fields, or block anchors.

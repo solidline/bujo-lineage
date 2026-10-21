@@ -1,3 +1,116 @@
-/* Only the add-on's own UI is styled. BuJo Bullets owns journal rendering. */
+/* Modal accessibility is always enabled; journal/code styling is independently gated. */
 .bujo-lineage-warning { color: var(--text-warning); }
 .bujo-lineage-modal button, .bujo-lineage-modal input { min-height: 44px; }
+
+body.bujo-lineage-journal,
+body.bujo-lineage-code {
+  --bl-open: #315e88;
+  --bl-done: #376b50;
+  --bl-muted: #69635c;
+  --bl-migrate: #65518b;
+  --bl-schedule: #805626;
+  --bl-event: #286b70;
+  --bl-priority: #a13b38;
+  --bl-code-bg: #f3f0ea;
+  --bl-code-ink: #373e49;
+  --bl-code-comment: #686b70;
+  --bl-code-keyword: #734699;
+  --bl-code-string: #346544;
+  --bl-code-number: #94532c;
+  --bl-code-function: #285d87;
+}
+body.theme-dark.bujo-lineage-journal,
+body.theme-dark.bujo-lineage-code {
+  --bl-open: #9bc2e4;
+  --bl-done: #a3c9af;
+  --bl-muted: #b2aaa0;
+  --bl-migrate: #c2afe1;
+  --bl-schedule: #e1bd83;
+  --bl-event: #8fcaca;
+  --bl-priority: #efa49d;
+  --bl-code-bg: #24272d;
+  --bl-code-ink: #e0dfda;
+  --bl-code-comment: #aaaeb8;
+  --bl-code-keyword: #cab0ed;
+  --bl-code-string: #a3c9a2;
+  --bl-code-number: #e4b18a;
+  --bl-code-function: #9dc7ed;
+}
+
+/* Keep the active theme's fonts/background. Symbols remain owned by BuJo Bullets. */
+body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view.mod-cm6) {
+  --checklist-done-color: var(--bl-done);
+  --tag-color: var(--bl-open);
+  --tag-background: transparent;
+  --list-spacing: 0.35em;
+}
+body.bujo-lineage-journal .markdown-rendered .task-list-item { padding-block: 0.18em; line-height: 1.65; }
+body.bujo-lineage-journal .markdown-source-view.mod-cm6 .HyperMD-task-line { padding-block: 0.12em; line-height: 1.65; }
+body.bujo-lineage-journal :is(.task-list-item, .HyperMD-task-line)[data-task="x"] { color: var(--bl-done); }
+body.bujo-lineage-journal :is(.task-list-item, .HyperMD-task-line)[data-task="-"] { color: var(--bl-muted); text-decoration: line-through; }
+body.bujo-lineage-journal :is(.task-list-item, .HyperMD-task-line)[data-task=">"] { color: var(--bl-migrate); text-decoration: none; }
+body.bujo-lineage-journal :is(.task-list-item, .HyperMD-task-line)[data-task="<"] { color: var(--bl-schedule); text-decoration: none; }
+body.bujo-lineage-journal :is(.task-list-item, .HyperMD-task-line)[data-task="o"] { color: var(--bl-event); text-decoration: none; }
+body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) input.task-list-item-checkbox { accent-color: var(--bl-open); }
+body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) input.task-list-item-checkbox:focus-visible { outline: 2px solid var(--bl-open); outline-offset: 3px; }
+body.bujo-lineage-journal .bujo-lineage-priority,
+body.bujo-lineage-journal .bujo-bullet-signifier { color: var(--bl-priority); font-weight: 650; }
+body.bujo-lineage-journal .bujo-lineage-question { color: var(--bl-event); font-weight: 650; }
+body.bujo-lineage-journal .bujo-lineage-scheduled { color: var(--bl-schedule); }
+body.bujo-lineage-journal .bujo-lineage-due { color: var(--bl-priority); }
+body.bujo-lineage-journal :is(.bujo-lineage-count, .bujo-lineage-nav) { color: var(--bl-muted); font-size: 0.92em; }
+body.bujo-lineage-journal .bujo-lineage-nav { text-decoration: underline; text-underline-offset: 0.2em; }
+body.bujo-lineage-journal :is(.markdown-rendered a.tag, .markdown-source-view .cm-hashtag) { color: var(--bl-open); background: transparent; }
+
+/* Actual 44px checkbox targets on touch devices; keep BuJo glyphs small inside them. */
+@media (pointer: coarse) {
+  body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) input.task-list-item-checkbox {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    --checkbox-size: 44px;
+    --checkbox-icon: 22px;
+    -webkit-mask-size: 22px;
+    -webkit-mask-position: center;
+    vertical-align: middle;
+    margin-block: 0;
+  }
+  body.bujo-lineage-journal .markdown-rendered .task-list-item { min-height: 48px; }
+  body.bujo-lineage-journal .markdown-rendered .task-list-item-checkbox { margin-inline-start: -2.8em; }
+  body.bujo-lineage-journal .markdown-rendered ul.contains-task-list { padding-inline-start: 3em; }
+}
+
+/* Obsidian/Prism provides language parsing; we supply colors, not a new engine. */
+body.bujo-lineage-code :is(.markdown-rendered, .markdown-source-view.mod-cm6) {
+  --code-background: var(--bl-code-bg);
+  --code-normal: var(--bl-code-ink);
+  --code-comment: var(--bl-code-comment);
+  --code-keyword: var(--bl-code-keyword);
+  --code-string: var(--bl-code-string);
+  --code-value: var(--bl-code-number);
+  --code-function: var(--bl-code-function);
+  --code-property: var(--bl-code-function);
+  --code-operator: var(--bl-code-ink);
+  --code-punctuation: var(--bl-muted);
+  --code-tag: var(--bl-code-keyword);
+  --code-important: var(--bl-priority);
+}
+body.bujo-lineage-code .markdown-rendered pre {
+  background: var(--bl-code-bg);
+  color: var(--bl-code-ink);
+  border: 1px solid color-mix(in srgb, var(--bl-muted) 25%, transparent);
+  border-radius: 8px;
+  padding: 1em;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+  line-height: 1.6;
+}
+body.bujo-lineage-code .markdown-rendered pre code { white-space: pre; overflow-wrap: normal; word-break: normal; }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.comment, .prolog, .doctype, .cdata) { color: var(--bl-code-comment); }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.keyword, .selector, .tag) { color: var(--bl-code-keyword); }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.string, .char, .attr-value) { color: var(--bl-code-string); }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.number, .boolean, .constant) { color: var(--bl-code-number); }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.function, .property, .class-name, .attr-name) { color: var(--bl-code-function); }
+body.bujo-lineage-code .markdown-rendered pre .token:is(.punctuation, .operator) { color: var(--bl-code-ink); }

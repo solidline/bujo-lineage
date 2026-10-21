@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Version matching manifest.json (for example 0.2.0)
+        description: Version matching manifest.json (for example 0.3.0)
         required: true
         type: string
 
@@ -23,6 +23,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck && npm test && npm run lint && npm run build
+      - name: Browser appearance checks
+        run: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            BUJO_CHROMIUM="$(command -v google-chrome)" npm run test:appearance
+          else
+            npx playwright-core install --with-deps chromium
+            npm run test:appearance
+          fi
       - run: python3 scripts/package.py
       - name: Verify version and publish release
         env:

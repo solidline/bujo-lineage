@@ -10,5 +10,5 @@ export class Modal {}
 export class Setting {}
 // Calendar arithmetic from local components, matching moment.add(1,'day').
 export function moment(){const d=new Date();return {add(n:number){d.setDate(d.getDate()+n);return this;},format(){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}};}
-export class Plugin { addSettingTab() {} }
+export class Plugin { addSettingTab() {} register() {} registerEditorExtension() {} }
 export class PluginSettingTab {}

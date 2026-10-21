@@ -9,3 +9,5 @@ Version 0.2.0 removes the copied status-command handler, signifier renderer/sett
 GitHub repository: https://github.com/solidline/bujo-lineage. The owner renamed it from obsidian-bujo-bullets. GitHub still records its original fork ancestry; product behavior is a companion add-on regardless of that ancestry label.
 
 No Obsidian community plugin listing has been submitted.
+
+Version 0.3.0 adds a new, optional appearance layer rather than restoring the copied renderer: independently gated journal and code styles, safe transient reading-view spans, and viewport-only editor decorations. BuJo Bullets continues to own symbols and manual status commands.

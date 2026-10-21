@@ -9,7 +9,7 @@ function fixture(){
  const objects=new Map<string,TFile|TFolder>([...files.keys()].map(p=>[p,new TFile(p)]));objects.set('Daily',new TFolder('Daily'));objects.set('Other',new TFolder('Other'));
  let data:unknown={};const leaves:{view:MarkdownView}[]=[];
  const vault={getAbstractFileByPath:(p:string)=>objects.get(p),getMarkdownFiles:()=>[...objects.values()].filter((f):f is TFile=>f instanceof TFile),read:async(f:TFile)=>files.get(f.path)!,process:async(f:TFile,fn:(s:string)=>string)=>files.set(f.path,fn(files.get(f.path)!)),create:async(p:string,s:string)=>{assert.ok(!objects.has(p));files.set(p,s);objects.set(p,new TFile(p));},on:()=>({})};
- const app={vault,workspace:{getLeavesOfType:()=>leaves,onLayoutReady:()=>{},openLinkText:async()=>{}},fileManager:{generateMarkdownLink:(f:TFile,from:string,sub:string,alias:string)=>`[[${f.path}${sub}|${alias}]]`}};
+ const app={vault,workspace:{containerEl:{ownerDocument:{body:{classList:{toggle:()=>{},remove:()=>{}}}}},on:()=>({}),getLeavesOfType:()=>leaves,onLayoutReady:()=>{},openLinkText:async()=>{}},fileManager:{generateMarkdownLink:(f:TFile,from:string,sub:string,alias:string)=>`[[${f.path}${sub}|${alias}]]`}};
  const plugin={app,settings:{dailyFolder:'Daily',dailyFormat:'YYYY-MM-DD',futureLog:'Future Log.md',signifiers:[]},loadData:async()=>data,saveData:async(d:unknown)=>{data=JSON.parse(JSON.stringify(d));},registerEvent:()=>{},addCommand:()=>{}};
  const controller=new LineageController(plugin as unknown as BuJoPlugin);
  return {files,objects,leaves,controller,app,plugin,open(p:string,text?:string){const v=new MarkdownView();v.file=objects.get(p) as TFile;v.editor=new MockEditor(text??files.get(p)!);v.persist=s=>{files.set(p,s);};leaves.push({view:v});return v;}};
@@ -49,7 +49,7 @@ test('source anchor collision with an ordinary paragraph is rejected',async()=> 
  await assert.rejects(f.controller.transfer('Daily/A.md',selected(f.files.get('Daily/A.md')!,0),'New.md','migrate',''),/Duplicate source/);assert.equal(f.files.has('New.md'),false);
 });
 
-test('add-on entrypoint registers only lineage commands and no journal renderer',async()=> {
+test('add-on entrypoint registers only lineage commands with an optional appearance renderer',async()=> {
  const {default:Addon}=await import('../src/index');const f=fixture();const commands:string[]=[];let renderers=0;
  const addon=Object.assign(Object.create(Addon.prototype),f.plugin,{
    addCommand:(command:{id:string})=>commands.push(command.id),
@@ -57,5 +57,5 @@ test('add-on entrypoint registers only lineage commands and no journal renderer'
  });
  await addon.onload();
  assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','view-task-history']);
- assert.equal(renderers,0);
+ assert.equal(renderers,1);
 });
