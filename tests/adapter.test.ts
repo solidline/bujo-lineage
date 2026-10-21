@@ -48,3 +48,14 @@ test('source anchor collision with an ordinary paragraph is rejected',async()=> 
  const f=fixture();await f.controller.start();f.files.set('Daily/A.md','- [ ] Capture ^existing');f.files.set('Other/Note.md','An ordinary paragraph ^existing');
  await assert.rejects(f.controller.transfer('Daily/A.md',selected(f.files.get('Daily/A.md')!,0),'New.md','migrate',''),/Duplicate source/);assert.equal(f.files.has('New.md'),false);
 });
+
+test('add-on entrypoint registers only lineage commands and no journal renderer',async()=> {
+ const {default:Addon}=await import('../src/index');const f=fixture();const commands:string[]=[];let renderers=0;
+ const addon=Object.assign(Object.create(Addon.prototype),f.plugin,{
+   addCommand:(command:{id:string})=>commands.push(command.id),
+   registerMarkdownPostProcessor:()=>{renderers++;},
+ });
+ await addon.onload();
+ assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','view-task-history']);
+ assert.equal(renderers,0);
+});

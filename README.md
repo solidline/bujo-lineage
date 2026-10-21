@@ -1,26 +1,32 @@
 # BuJo Lineage
 
-A local, mobile-compatible Obsidian Bullet Journal plugin. Capture a task in your daily note, transfer the same commitment to another note, and follow its history even after changing its wording or renaming its notes. No Tasks installation, service, account, telemetry, or network access is required.
+A local, mobile-compatible companion add-on for [BuJo Bullets](https://github.com/frankolson/obsidian-bujo-bullets). Capture a task in your daily note, transfer the same commitment to another note, and follow its history even after changing its wording or renaming its notes. No Tasks installation, service, account, telemetry, or network access is required.
 
-Forked from **BuJo Bullets by Will Olson**, upstream commit `46eb512ed8d5909c54b576e67130ef12eccbed70`. The original MIT [LICENSE](LICENSE) is unchanged; see [attribution and changes](UPSTREAM.md).
+Originally developed from **BuJo Bullets by Will Olson**, upstream commit `46eb512ed8d5909c54b576e67130ef12eccbed70`. The original MIT [LICENSE](LICENSE) is unchanged; see [attribution and changes](UPSTREAM.md).
 
 ## Install from GitHub
 
-Repository: [solidline/obsidian-bujo-bullets](https://github.com/solidline/obsidian-bujo-bullets). This fork's plugin name is **BuJo Lineage**, ID `bujo-lineage`.
+Repository: [solidline/obsidian-bujo-bullets](https://github.com/solidline/obsidian-bujo-bullets). The add-on's plugin name is **BuJo Lineage**, ID `bujo-lineage`.
 
-With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/obsidian-bujo-bullets`, and add it. Disable original BuJo Bullets and enable **BuJo Lineage** in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
+With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/obsidian-bujo-bullets`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.1.0.zip` from the [latest release](https://github.com/solidline/obsidian-bujo-bullets/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This fork has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.2.0.zip` from the [latest release](https://github.com/solidline/obsidian-bujo-bullets/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.1.0.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.2.0.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
-3. **Disable the original BuJo Bullets plugin** to avoid duplicate commands and conflicting rendering. This fork retains its checkbox styles and configurable signifiers (`!` and `?` by default).
+3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds only migration, scheduling, history, and recovery; it does not duplicate those features.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
 5. On iPhone, open Settings → Mobile → Manage toolbar options (wording can vary by Obsidian version). Add **BuJo Lineage: Migrate task** and **BuJo Lineage: Schedule for later**. Optionally add **View task history**. Place the cursor on the task line before running a command.
 
 The plugin uses Obsidian/browser APIs only and declares `isDesktopOnly: false`. Desktop, iPhone, and live Tasks runtime checks were **not available in this environment**. Automated vault/editor doubles passed; follow [the manual checklist](docs/MANUAL-CHECKS.md) before relying on it for your journal. No real vault was accessed.
+
+## Upgrading from 0.1.0
+
+Version 0.2.0 changes BuJo Lineage from a replacement to a companion add-on. Keep the same plugin ID and folder (`bujo-lineage`) so existing settings, pending operations, and Markdown identities survive the update. **Re-enable BuJo Bullets** for its checkbox styling, signifiers, and status commands. Legacy signifier settings in BuJo Lineage data are left untouched but no longer used; configure signifiers in BuJo Bullets. Transfer/history schema v1 is unchanged.
+
+The GitHub repository is currently `solidline/obsidian-bujo-bullets`; the intended name is `solidline/bujo-lineage`. The connected integration cannot rename repositories. Once the owner renames it in GitHub settings, use the new URL in BRAT; GitHub normally redirects the old repository URL. No community-directory submission is involved.
 
 ## Everyday use
 
@@ -32,7 +38,7 @@ The source becomes `[>]`; the new destination is `[ ]`. Counts progress **0 → 
 
 **View task history** shows note paths, status symbols, action, timestamp, count, and optional reason, with an **Open occurrence** button for each row. Missing targets, duplicate anchors, broken reciprocal references, and conflicting successors are reported explicitly. Running a transfer command on an archived occurrence with a successor offers to open that successor or view history.
 
-Retained status commands change the Markdown symbol directly:
+BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the manual status commands and visual styling:
 
 | Markdown | Meaning |
 |---|---|
@@ -44,14 +50,14 @@ Retained status commands change the Markdown symbol directly:
 | `- [o]` | Event |
 | `- Some note` | Ordinary note, not a checkbox task |
 
-Manual status changes are still available; reopening an old archived copy manually can create a branch. History reports multiple open occurrences. The unsafe upstream reading-view context menu was removed; status commands remain available in the editor on desktop and mobile.
+Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage does not register status commands, modify BuJo Bullets settings, or restyle journal checkboxes.
 
 ## Settings and destination rules
 
 - **Daily note folder**: empty means vault root. Set it to match your core Daily Notes folder.
 - **Daily filename format**: Moment format, default `YYYY-MM-DD`; match your Daily Notes filename format. Tomorrow is computed with local calendar-day arithmetic, not by adding 24 hours, so daylight saving changes are respected. Invalid proposed paths leave the destination blank for manual entry.
 - **Future Log path**: default `Future Log.md`.
-- **Signifiers**: retained upstream editor for configurable symbols and names.
+Signifiers and checkbox appearance are configured in BuJo Bullets, not in this add-on.
 
 Core Daily Notes configuration is not exposed through the documented public plugin API. This version deliberately uses the small explicit folder/format fallback rather than private core-plugin properties, and needs no other daily-note plugin. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
 
@@ -128,7 +134,7 @@ Indexing runs on create/modify/delete/rename events and on explicit commands/sta
 
 ## Optional Tasks compatibility
 
-This is **Markdown syntax compatibility**, not a formal runtime integration. Tasks is optional and no private Tasks APIs are used. Do not enable both BuJo Bullets and this fork. The adapter in `src/tasks-interop.ts` handles trailing emoji fields and rejection rules.
+This is **Markdown syntax compatibility**, not a formal runtime integration. Tasks is optional and no private Tasks APIs are used. BuJo Bullets and BuJo Lineage can be enabled together; neither is a Tasks runtime dependency. The adapter in `src/tasks-interop.ts` handles trailing emoji fields and rejection rules.
 
 In **Tasks settings → Statuses**, manually configure these custom-status types (the plugin does not alter another plugin's configuration):
 
@@ -167,6 +173,6 @@ python3 scripts/package.py
 
 Node 18+ is recommended (validated here with Node 24.19.0 / npm 11.9.0). Python 3 is only needed for packaging. The lockfile is committed. Runtime has no third-party dependency. `npm run dev` runs the upstream esbuild watch workflow. See [validation results](docs/VALIDATION.md).
 
-Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; upstream settings/rendering/status modules remain small. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
+Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its rendering, signifiers, and manual status commands. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
 
 Deferred: bulk migration, automatic daily rollover, heading/template placement, calendars, dashboards, dependency-safe transfer, same-note migrations, recurrence transfer and automatic conflict merging. Very large vaults can make explicit rebuilds slower; no background service is involved.

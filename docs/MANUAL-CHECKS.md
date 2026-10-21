@@ -4,7 +4,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 
 ## Desktop
 
-1. Install dist/bujo-lineage, disable BuJo Bullets, reload, enable the fork. Confirm ! / ? signifiers and all six checkbox styles; confirm [-] is cancelled, not a note.
+1. Install dist/bujo-lineage, keep BuJo Bullets enabled, reload, and enable BuJo Lineage alongside it. Confirm only four Lineage commands (migrate, schedule, history, recovery), with no duplicated status commands. Confirm ! / ? signifiers and all six checkbox styles still come from BuJo Bullets; confirm [-] is cancelled, not a note.
 2. Make an unsaved daily task with a due date, tags, !, and two indented subtasks. Run Migrate task. Cancel once; inspect source/destination to confirm no IDs or files were added.
 3. Repeat, search a full note path containing spaces, choose it, supply a multiline reason containing `-->`, and transfer. Confirm source [>], destination [ ], count 0/1, unchanged due date and exactly one set of actionable children. Confirm final block IDs in source mode and click each link in Reading View and Live Preview.
 4. Repeat on the destination after renaming its wording. Schedule to Future Log with a valid date; expect source [<], current [ ], count 2, exactly one scheduled field and original due date. Confirm no reminder notification was promised.
@@ -17,7 +17,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 
 ## iPhone
 
-1. Install/sync the same plugin folder with the app closed, enable it, and disable original BuJo Bullets. Add Migrate task and Schedule for later through Settings → Mobile → toolbar options.
+1. Install/sync the same plugin folder with the app closed, enable it, and keep original BuJo Bullets enabled. Add Migrate task and Schedule for later through Settings → Mobile → toolbar options.
 2. Place the editor cursor on a task and invoke each toolbar command. Search/type a destination with spaces; select a date; enter a reason; cancel and repeat. Check keyboard access, readable labels, scrolling, and touch targets.
 3. Follow history buttons and previous/next links with taps only. Background/restart after a transfer and verify durable history and recovery. Repeat in airplane mode: no server or login should be needed.
 4. Avoid simultaneous offline transfers on desktop and phone. If deliberately testing them, confirm conflicts are reported after sync; no automatic branch winner should be chosen.

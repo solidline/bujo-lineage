@@ -1,10 +1,11 @@
-# Upstream attribution
+# Attribution and add-on relationship
 
-BuJo Lineage is a source fork of [BuJo Bullets](https://github.com/frankolson/obsidian-bujo-bullets) by Will Olson.
+BuJo Lineage **0.2.0+ is a companion add-on** for [BuJo Bullets](https://github.com/frankolson/obsidian-bujo-bullets), by Will Olson. Enable both: BuJo Bullets handles checkbox rendering, signifiers, and manual status commands; BuJo Lineage handles transfers, scheduling, history, and recovery. Lineage uses shared Markdown syntax without private APIs or configuration changes to the original plugin. Basic transfer/history also works without BuJo Bullets, using Obsidian's standard checkbox rendering.
 
-Starting commit: **46eb512ed8d5909c54b576e67130ef12eccbed70** (upstream version 1.2.1).
-The original MIT LICENSE is preserved verbatim. Original README: docs/UPSTREAM-README.md.
-GitHub fork: https://github.com/solidline/obsidian-bujo-bullets. The owner created the remote fork; the BuJo Lineage implementation and installable release are published there at their request. No Obsidian community plugin listing was submitted.
+The initial 0.1.0 implementation began from upstream commit **46eb512ed8d5909c54b576e67130ef12eccbed70** (upstream version 1.2.1). The original MIT LICENSE remains unchanged and the original README is preserved at docs/UPSTREAM-README.md. Attribution reflects that origin; it does not make Will Olson responsible for the add-on.
 
-Retained: six checkbox meanings, status commands, configurable signifiers and CSS.
-Changed: removed the ordinal-based reading-view context menu because it targeted the active file rather than the rendered source and could overwrite unsaved text. Use editor palette/mobile status commands. Replaced isomorphic-dompurify (which pulled in Node/jsdom) with safe plain-text DOM wrapping of signifiers, for mobile-compatible runtime code. Added lineage and recoverable transfer workflow.
+Version 0.2.0 removes the copied status-command handler, signifier renderer/settings, and global checkbox CSS. The lineage schema and plugin ID remain unchanged for existing installations.
+
+Current GitHub repository: https://github.com/solidline/obsidian-bujo-bullets. Intended name: bujo-lineage. GitHub still records the repository's fork ancestry; renaming or detaching that network relationship requires repository-owner settings access unavailable to the connected integration. Product behavior is an add-on regardless of GitHub's ancestry label.
+
+No Obsidian community plugin listing has been submitted.

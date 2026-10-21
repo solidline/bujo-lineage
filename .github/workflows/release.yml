@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Version matching manifest.json (for example 0.1.0)
+        description: Version matching manifest.json (for example 0.2.0)
         required: true
         type: string
 
@@ -31,7 +31,7 @@ jobs:
         run: |
           node -e 'if (require("./manifest.json").version !== process.env.RELEASE_TAG) throw Error("Tag must match manifest version")'
           gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" \
-            --title "BuJo Lineage $RELEASE_TAG" --generate-notes \
+            --title "BuJo Lineage $RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md --generate-notes \
             main.js manifest.json styles.css LICENSE UPSTREAM.md \
             "dist/bujo-lineage-$RELEASE_TAG.zip" \
             "dist/bujo-lineage-source-$RELEASE_TAG.zip"

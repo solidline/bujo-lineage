@@ -1,7 +1,7 @@
 {
   "name": "bujo-lineage",
-  "version": "0.1.0",
-  "description": "Alternate checkbox types to support Bullet Journal bullets",
+  "version": "0.2.0",
+  "description": "Companion add-on for BuJo Bullets: task transfers, scheduling, and portable history.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
