@@ -17,7 +17,7 @@ export class CommandHandler {
         editorCheckCallback: (checking, editor, view) => {
           const cursor = editor.getCursor()
           const line = editor.getLine(cursor.line)
-          const isBullet = isBulletText(line)
+          const isBullet = isBulletText(line) && !this.plugin.lineage?.hasPending()
 
           if (isBullet) {
             if (!checking) {

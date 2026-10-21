@@ -1,0 +1,11 @@
+Source: `2026-10-21.md`
+
+```markdown
+- [>] ! Book car service · moved 0 times · [[2026-10-22#^occ-32b7e455ac2f1a519a328f82b12503ae|next]] <!--bujo-lineage:%7B%22v%22%3A1%2C%22lineage%22%3A%22task%2D5bdeb14bd6ae57e7a16c089600e00ce1%22%2C%22occurrence%22%3A%22occ%2D46ffe759a3179c5dfca7b2de30e7e04f%22%2C%22count%22%3A0%2C%22action%22%3A%22migrate%22%2C%22timestamp%22%3A%222026%2D10%2D21T17%3A30%3A00.000Z%22%2C%22operation%22%3A%22op%2Dca5065e7df04f8672532f2a1ba73c10a%22%2C%22next%22%3A%22occ%2D32b7e455ac2f1a519a328f82b12503ae%22%2C%22reason%22%3A%22Need%20the%20registration%20number%22%7D--> #home 📅 2026-11-10 ^occ-46ffe759a3179c5dfca7b2de30e7e04f
+```
+
+Destination after the first transfer: `2026-10-22.md`
+
+```markdown
+- [ ] ! Book car service · moved 1 time · [[2026-10-21#^occ-46ffe759a3179c5dfca7b2de30e7e04f|previous]] <!--bujo-lineage:%7B%22v%22%3A1%2C%22lineage%22%3A%22task%2D5bdeb14bd6ae57e7a16c089600e00ce1%22%2C%22occurrence%22%3A%22occ%2D32b7e455ac2f1a519a328f82b12503ae%22%2C%22count%22%3A1%2C%22previous%22%3A%22occ%2D46ffe759a3179c5dfca7b2de30e7e04f%22%2C%22action%22%3A%22migrate%22%2C%22timestamp%22%3A%222026%2D10%2D21T17%3A30%3A00.000Z%22%2C%22reason%22%3A%22Need%20the%20registration%20number%22%2C%22operation%22%3A%22op%2Dca5065e7df04f8672532f2a1ba73c10a%22%7D--> #home 📅 2026-11-10 ^occ-32b7e455ac2f1a519a328f82b12503ae
+```

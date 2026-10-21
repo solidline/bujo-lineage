@@ -1,0 +1,13 @@
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {plan,selected} from '../src/lineage';
+const link=(p:string,b:string,a:string)=>`[[${p.replace(/\.md$/,'')}#^${b}|${a}]]`;
+const original='- [ ] ! Book car service #home 📅 2026-11-10';
+const first=plan(selected(original,0),'2026-10-21.md','2026-10-22.md','migrate','Need the registration number',undefined,link,'2026-10-21T17:30:00.000Z');
+const renamed=first.destination.replace('Book car service','Call mechanic');
+const second=plan(selected(renamed,0),'2026-10-22.md','Future Log.md','schedule','Call after payday','2026-11-02',link,'2026-10-22T09:15:00.000Z');
+mkdirSync('sample-vault',{recursive:true});
+writeFileSync('sample-vault/2026-10-21.md','# October 21\n\n'+first.source+'\n');
+writeFileSync('sample-vault/2026-10-22.md','# October 22\n\n'+second.source+'\n');
+writeFileSync('sample-vault/Future Log.md','# Future Log\n\n'+second.destination.replace('- [ ]','- [x]')+'\n');
+writeFileSync('sample-vault/Capture.md','# Try a fresh task\n\n- [ ] ! Book dentist #personal\n  - [ ] Find phone number\n  Bring insurance information.\n');
+writeFileSync('docs/storage-example.md','Source: `2026-10-21.md`\n\n```markdown\n'+first.source+'\n```\n\nDestination after the first transfer: `2026-10-22.md`\n\n```markdown\n'+first.destination+'\n```\n');

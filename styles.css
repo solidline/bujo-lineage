@@ -87,3 +87,5 @@ li[data-task="o"] > p > input {
 .bujo-bullet-signifier {
   color: var(--text-error);
 }
+.bujo-lineage-warning { color: var(--text-warning); }
+.bujo-lineage-modal button, .bujo-lineage-modal input { min-height: 44px; }
