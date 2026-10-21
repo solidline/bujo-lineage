@@ -27,7 +27,7 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
     new Setting(this.containerEl).setName('Appearance').setHeading();
     for (const [key, name, description] of [
       ['preferJetBrainsMono', 'Prefer JetBrains Mono', 'Use bundled JetBrains Mono for note text and code, including on iPhone. Turn off to use your theme fonts.'],
-      ['journalStyling', 'BuJo journal styling', 'Quiet light/dark task colors, dates, signifiers, history links, and larger mobile checkbox controls.'],
+      ['journalStyling', 'BuJo journal styling', 'Quiet light/dark task colors, dates, signifiers, history links, and compact mobile controls and consistent spacing.'],
       ['codeHighlighting', 'Code block color styling', 'Optional colors and spacing only. Obsidian already provides syntax highlighting; leave off to use your theme.'],
     ] as const) {
       new Setting(this.containerEl).setName(name).setDesc(description).addToggle(toggle => toggle.setValue(this.plugin.settings[key]).onChange(async value => {

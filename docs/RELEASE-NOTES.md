@@ -1,7 +1,7 @@
-BuJo Lineage 0.3.5 makes the scheduled date optional.
+BuJo Lineage 0.3.6 corrects mobile task spacing and padding.
 
-Schedule for later still suggests Future Log, marks the source [<], creates one open destination, increments the count, and records the transfer timestamp in history. Leave the date blank to rely on the Future Log location and move history. No scheduled field is added; any existing scheduled date is preserved. Choose a date to add or replace the single Tasks-compatible scheduled field. Due dates remain unchanged. A supplied invalid date still rejects the transfer before writing.
+Visible checkbox controls are now 22px instead of 44px. The old forced negative checkbox margin and task-list padding are removed; Obsidian and the active theme retain their native hanging indentation. Side markers use inset shadows instead of borders/padding that shift text. Task row spacing is normalized, history buttons use a compact 32px mobile minimum height, and BuJo glyph masks are centered with no-repeat to prevent tiled migration arrows.
 
-Update through BRAT and reload Obsidian. No settings or stored-history migration is required. Live Preview continues to show compact history metadata; Source mode retains the raw record.
+Update through BRAT and reload Obsidian. BuJo journal styling remains optional. No task text, dates, IDs, or history is changed.
 
-25 core/adapter tests and 39 browser checks pass, plus type checking, lint, and build. New tests cover scheduling without a date, durable timestamp/count/references, existing-date preservation, replacement dates, and the actual vault adapter with a blank date. Live Obsidian/iPhone checks remain unverified.
+25 core/adapter tests and 44 Chromium checks pass, plus type checking, lint, and build. New regressions verify compact controls, preserved theme margins/list padding and CodeMirror indentation, no-repeat glyph masks, and smaller history controls. Representative phone-width previews were regenerated. Real iPhone/Obsidian and third-party themes still need verification.

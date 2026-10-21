@@ -37,7 +37,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 
 1. Keep BuJo Bullets enabled. In BuJo Lineage settings, toggle journal styling and code highlighting independently. Confirm disabling both restores your theme's appearance without changing note text.
 2. Switch between light and dark mode. Check open/x/-/>/</o task states, leading ! and ?, tags, due/scheduled dates, count text, previous/next links, nested lists, and a task containing inline code. Repeat in Reading View, Live Preview, and Source mode; verify fenced task examples are not decorated as real journal tasks.
-3. On iPhone, tap all six checkbox states and navigate history links. Confirm 44px controls do not overlap neighboring task text or child bullets. Test narrow portrait and landscape; turn journal styling off if a theme's layout conflicts.
+3. On iPhone, tap all six checkbox states and navigate history links. Confirm compact controls do not overlap neighboring task text or child bullets. Test narrow portrait and landscape; turn journal styling off if a theme's layout conflicts.
 4. Create fenced python/javascript/json blocks with comments, strings, numbers, and long lines. Check readable light/dark colors, code copy buttons, horizontal scrolling, selection, and editing. Confirm an unknown language stays plain text.
 5. In a desktop popout, toggle appearance, switch modes, close the popout, then unload the plugin. No Lineage body classes should remain. Highlighting must never change Markdown, identity comments, Tasks fields, or block anchors.
 
@@ -50,3 +50,7 @@ Migrate a task, then edit its wording in Live Preview. The encoded HTML comment 
 ## Optional scheduled date (0.3.5)
 
 Schedule a fresh task to Future Log with the date blank: source [<], destination [ ], count incremented, no new scheduled field, and move timestamp visible in history. Repeat with an existing scheduled date and leave blank: retain that field and any due date. Enter a replacement date: exactly one scheduled field should remain. A supplied invalid date must reject without mutations.
+
+## Mobile spacing regression (0.3.6)
+
+On iPhone in Live Preview and Reading View, test open/completed/migrated tasks with links and long wrapping titles, nested tasks, and a history button. Checkbox glyphs should be compact (22px), migrated arrows should appear once, wrapped text should follow the native hanging indent, and the history control should stay inline without a large empty box. Repeat in portrait/landscape, with the default theme, and with journal styling off. No note margins outside task lists should change.

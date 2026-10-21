@@ -62,22 +62,30 @@ body.bujo-lineage-journal :is(.bujo-lineage-count, .bujo-lineage-nav) { color: v
 body.bujo-lineage-journal .bujo-lineage-nav { text-decoration: underline; text-underline-offset: 0.2em; }
 body.bujo-lineage-journal :is(.markdown-rendered a.tag, .markdown-source-view .cm-hashtag) { color: var(--bl-open); background: transparent; }
 
-/* Actual 44px checkbox targets on touch devices; keep BuJo glyphs small inside them. */
+/* Keep controls compact. Native theme/CodeMirror owns list and hanging indents. */
 @media (pointer: coarse) {
   body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) input.task-list-item-checkbox {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    --checkbox-size: 44px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    --checkbox-size: 22px;
     --checkbox-icon: 22px;
-    -webkit-mask-size: 22px;
+    -webkit-mask-size: 22px 22px;
     -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     vertical-align: middle;
-    margin-block: 0;
   }
-  body.bujo-lineage-journal .markdown-rendered .task-list-item { min-height: 48px; }
-  body.bujo-lineage-journal .markdown-rendered .task-list-item-checkbox { margin-inline-start: -2.8em; }
-  body.bujo-lineage-journal .markdown-rendered ul.contains-task-list { padding-inline-start: 3em; }
+  body.bujo-lineage-journal .markdown-rendered .task-list-item {
+    padding-block: 0.25em;
+    line-height: 1.5;
+  }
+  body.bujo-lineage-journal .markdown-rendered .task-list-item > p {margin-block: 0;}
+  body.bujo-lineage-journal .markdown-source-view.mod-cm6 .HyperMD-task-line {
+    padding-block: 0.2em;
+    line-height: 1.5;
+  }
 }
 
 /* Obsidian/Prism provides language parsing; we supply colors, not a new engine. */
@@ -236,8 +244,7 @@ body.bujo-lineage-journal :is(.markdown-rendered, .markdown-source-view) {
 }
 body.bujo-lineage-journal .bujo-lineage-task {
   --bl-status: var(--bl-open);
-  border-inline-start: 3px solid var(--bl-status);
-  padding-inline-start: 0.65em;
+  box-shadow: inset 2px 0 var(--bl-status);
 }
 body.bujo-lineage-journal .bujo-lineage-status-done { --bl-status: var(--bl-done); color: var(--bl-done); }
 body.bujo-lineage-journal .bujo-lineage-status-cancelled { --bl-status: var(--bl-muted); color: var(--bl-muted); }
@@ -276,4 +283,13 @@ body.bujo-lineage-journal .bujo-lineage-status-open { color: var(--text-normal, 
   cursor: pointer;
 }
 .bujo-lineage-history-chip:focus-visible {outline: 2px solid var(--interactive-accent);outline-offset: 2px;}
-@media (pointer: coarse) {.bujo-lineage-history-chip {min-height: 44px;}}
+@media (pointer: coarse) {
+  body :is(.markdown-source-view, .markdown-rendered) button.bujo-lineage-history-chip {
+    min-height: 32px;
+    min-width: 0;
+    padding: 0.1em 0.4em;
+    margin-block: 0.15em;
+    vertical-align: baseline;
+    white-space: nowrap;
+  }
+}

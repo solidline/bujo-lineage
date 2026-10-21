@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.5.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.6.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.5.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.6.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -33,7 +33,7 @@ The repository is now `solidline/bujo-lineage`. If BRAT still tracks the old `so
 In **Settings → BuJo Lineage → Appearance**, use independent appearance toggles:
 
 - **Prefer JetBrains Mono**: bundled JetBrains Mono Regular for note text and code. Works offline without a separate font installation, including on iPhone. Disable it to restore theme fonts. It leaves workspace navigation and UI fonts alone.
-- **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices receive 44-pixel checkbox targets. Status symbols and text remain meaningful without color.
+- **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices use compact 22-pixel checkbox controls with comfortable row spacing; native list margins and hanging indentation are preserved. Status symbols and text remain meaningful without color.
 - **Code block color styling** (off by default): optional colors and spacing only. Obsidian already provides syntax highlighting without this plugin. Enabling this setting coordinates colors and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
 
 The color styles follow Obsidian's light/dark mode and leave workspace panels and note backgrounds intact. The font preference is independent of both color toggles. Turn a toggle off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
@@ -201,3 +201,7 @@ Update to 0.3.3 or newer through BRAT, reload Obsidian, and enable **BuJo journa
 ### Code syntax highlighting is already built in
 
 Obsidian supplies syntax highlighting. Lineage does not add language parsers. The old Code highlighting preference is now called **Code block color styling**, defaults off on new installs, and is purely cosmetic. Existing saved choices are preserved; turn this setting off to use Obsidian/the theme for code colors. The JetBrains Mono preference remains independent.
+
+### Mobile spacing (0.3.6)
+
+Checkboxes use 22px visible controls rather than scaling the native input to 44px. BuJo icon masks are centered and do not repeat. The add-on no longer forces checkbox negative margins, list padding, or task-line indentation. Status markers are inset shadows, so they do not shift text or change wrapping. The inline history button uses a compact 32px mobile minimum height. Your theme and Obsidian continue to control list indentation.
