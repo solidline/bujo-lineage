@@ -6,6 +6,6 @@ The initial 0.1.0 implementation began from upstream commit **46eb512ed8d5909c54
 
 Version 0.2.0 removes the copied status-command handler, signifier renderer/settings, and global checkbox CSS. The lineage schema and plugin ID remain unchanged for existing installations.
 
-Current GitHub repository: https://github.com/solidline/obsidian-bujo-bullets. Intended name: bujo-lineage. GitHub still records the repository's fork ancestry; renaming or detaching that network relationship requires repository-owner settings access unavailable to the connected integration. Product behavior is an add-on regardless of GitHub's ancestry label.
+GitHub repository: https://github.com/solidline/bujo-lineage. The owner renamed it from obsidian-bujo-bullets. GitHub still records its original fork ancestry; product behavior is a companion add-on regardless of that ancestry label.
 
 No Obsidian community plugin listing has been submitted.

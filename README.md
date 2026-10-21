@@ -6,11 +6,11 @@ Originally developed from **BuJo Bullets by Will Olson**, upstream commit `46eb5
 
 ## Install from GitHub
 
-Repository: [solidline/obsidian-bujo-bullets](https://github.com/solidline/obsidian-bujo-bullets). The add-on's plugin name is **BuJo Lineage**, ID `bujo-lineage`.
+Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage). The add-on's plugin name is **BuJo Lineage**, ID `bujo-lineage`.
 
-With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/obsidian-bujo-bullets`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
+With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.2.0.zip` from the [latest release](https://github.com/solidline/obsidian-bujo-bullets/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.2.0.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
@@ -26,7 +26,7 @@ The plugin uses Obsidian/browser APIs only and declares `isDesktopOnly: false`. 
 
 Version 0.2.0 changes BuJo Lineage from a replacement to a companion add-on. Keep the same plugin ID and folder (`bujo-lineage`) so existing settings, pending operations, and Markdown identities survive the update. **Re-enable BuJo Bullets** for its checkbox styling, signifiers, and status commands. Legacy signifier settings in BuJo Lineage data are left untouched but no longer used; configure signifiers in BuJo Bullets. Transfer/history schema v1 is unchanged.
 
-The GitHub repository is currently `solidline/obsidian-bujo-bullets`; the intended name is `solidline/bujo-lineage`. The connected integration cannot rename repositories. Once the owner renames it in GitHub settings, use the new URL in BRAT; GitHub normally redirects the old repository URL. No community-directory submission is involved.
+The repository is now `solidline/bujo-lineage`. If BRAT still tracks the old `solidline/obsidian-bujo-bullets` URL, use the new URL for future installations. GitHub normally redirects the old URL. No community-directory submission is involved.
 
 ## Everyday use
 
