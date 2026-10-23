@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.7.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.8.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.7.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.8.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -68,12 +68,13 @@ Manual status changes remain the responsibility of BuJo Bullets or your editor. 
 
 ## Settings and destination rules
 
-- **Daily note folder**: empty means vault root. Set it to match your core Daily Notes folder.
-- **Daily filename format**: Moment format, default `YYYY-MM-DD`; match your Daily Notes filename format. Tomorrow is computed with local calendar-day arithmetic, not by adding 24 hours, so daylight saving changes are respected. Invalid proposed paths leave the destination blank for manual entry.
+- **Use core Daily Notes settings** (on by default): tomorrow follows the core Daily Notes folder and filename format.
+- **Fallback daily note folder**: used when the core configuration file is absent or the toggle is off. Empty means vault root. Disable the toggle to use this as an explicit override.
+- **Fallback daily filename format**: Moment format, default `YYYY-MM-DD`; used with the fallback folder. Tomorrow is computed with local calendar-day arithmetic, not by adding 24 hours, so daylight saving changes are respected. Invalid proposed paths leave the destination blank for manual entry.
 - **Future Log path**: default `Future Log.md`.
 BuJo Bullets configures symbols and signifier meanings. BuJo Lineage optionally adds the appearance layer below.
 
-Core Daily Notes configuration is not exposed through the documented public plugin API. This version deliberately uses the small explicit folder/format fallback rather than private core-plugin properties, and needs no other daily-note plugin. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
+The core Daily Notes plugin has no formal settings API. This version reads its existing `daily-notes.json` configuration through the public vault adapter, under `vault.configDir` (normally `.obsidian`). It validates the folder/format fields and never writes the core configuration or uses private core-plugin properties. When the file is absent, it uses the explicit fallback folder/format settings; malformed or unreadable configuration produces an error and leaves the destination for manual selection. No third-party daily-note plugin is required. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
 
 Only open checkbox tasks outside fenced code are transferable. Completed/cancelled/event/ordinary entries and archived sources are rejected. The original list marker and indentation, signifiers, tags, dates, and existing valid source anchor are retained. **All contiguous deeper-indented child content**, including blank lines leading into further indented content, moves to the destination; it is removed from the historical source so actionable subtasks are not duplicated after success. Unindented following paragraphs are separate note content. Children with their own block anchors or lineage are rejected to avoid copying anchors; move those separately first. Nested recurring/dependency-bearing tasks also cause rejection. Keep the cursor on the checkbox line, not a child paragraph.
 

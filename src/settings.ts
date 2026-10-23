@@ -5,6 +5,7 @@ export interface BuJoPluginSettings {
   preferJetBrainsMono: boolean;
   journalStyling: boolean;
   codeHighlighting: boolean;
+  useDailyNotesSettings: boolean;
   dailyFolder: string;
   dailyFormat: string;
   futureLog: string;
@@ -14,6 +15,7 @@ export const DEFAULT_SETTINGS: BuJoPluginSettings = {
   preferJetBrainsMono: true,
   journalStyling: true,
   codeHighlighting: false,
+  useDailyNotesSettings: true,
   dailyFolder: '',
   dailyFormat: 'YYYY-MM-DD',
   futureLog: 'Future Log.md',
@@ -36,13 +38,14 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
       }));
     }
     new Setting(this.containerEl).setName('Daily notes and destinations').setHeading();
-    for (const [key, label] of [['dailyFolder', 'Daily note folder'], ['dailyFormat', 'Daily filename format'], ['futureLog', 'Future Log path']] as const) {
+    new Setting(this.containerEl).setName('Use core Daily Notes settings').setDesc('Use the core Daily Notes folder and filename format for tomorrow. When its configuration file is absent, use the fallback fields below. Turn off to use those fields as an override.').addToggle(toggle => toggle.setValue(this.plugin.settings.useDailyNotesSettings).onChange(async value => {this.plugin.settings.useDailyNotesSettings=value;await this.plugin.saveSettings();}));
+    for (const [key, label] of [['dailyFolder', 'Fallback daily note folder'], ['dailyFormat', 'Fallback daily filename format'], ['futureLog', 'Future Log path']] as const) {
       new Setting(this.containerEl).setName(label).addText(t => t.setValue(this.plugin.settings[key]).onChange(async value => {
         this.plugin.settings[key] = value;
         await this.plugin.saveSettings();
       }));
     }
-    new Setting(this.containerEl).setDesc('Set these to match your core Daily Notes settings. Folders must already exist; no templates are executed.');
+    new Setting(this.containerEl).setDesc('Fallback fields apply only when core settings are unavailable or disabled. Folders must already exist; no templates are executed.');
     new Setting(this.containerEl).setDesc('BuJo Lineage adds task transfers and history. Keep BuJo Bullets enabled for checkbox styles, signifiers, and manual status commands. Configure symbols and signifiers in BuJo Bullets. Optional Lineage appearance does not change its commands or settings.');
   }
 }

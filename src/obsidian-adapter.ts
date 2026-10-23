@@ -1,6 +1,6 @@
 import { MarkdownView, Modal, Notice, Setting, TFile, TFolder, moment } from 'obsidian';
 import type BuJoPlugin from './index';
-import { tomorrowPath } from './daily';
+import { coreDailySettings, tomorrowPath } from './daily';
 import { blockTargets, Engine, Located, Plan, Task, history, path, plan, selected, tasks, validate } from './lineage';
 
 export class LineageController {
@@ -86,8 +86,15 @@ export class LineageController {
     if(folder && !(this.app.vault.getAbstractFileByPath(folder) instanceof TFolder)) throw Error('Destination folder is missing. Create it first.');
     const f=this.app.vault.getAbstractFileByPath(p); if(f && !(f instanceof TFile)) throw Error('Destination must be a Markdown note.');
   }
-  tomorrow():string {
-    return tomorrowPath(moment(),this.plugin.settings.dailyFolder,this.plugin.settings.dailyFormat);
+  async tomorrow():Promise<string> {
+    let settings={folder:this.plugin.settings.dailyFolder,format:this.plugin.settings.dailyFormat};
+    if(this.plugin.settings.useDailyNotesSettings!==false) {
+      const configPath=(this.app.vault.configDir || '.obsidian')+'/daily-notes.json';
+      try {
+        if(await this.app.vault.adapter.exists(configPath)) settings=coreDailySettings(JSON.parse(await this.app.vault.adapter.read(configPath)));
+      } catch(error) {throw Error('Could not read core Daily Notes settings: '+String(error)+'. Choose a destination manually or disable core settings in BuJo Lineage.');}
+    }
+    return tomorrowPath(moment(),settings.folder,settings.format);
   }
   future() { return this.plugin.settings.futureLog; }
   async transfer(source:string,t:Task,dest:string,action:'migrate'|'schedule',reason:string,date?:string) {
@@ -140,10 +147,14 @@ export class LineageController {
 }
 class TransferModal extends Modal {
   constructor(private controller:LineageController,private source:string,private task:Task,private action:'migrate'|'schedule') {super(controller.app);}
-  onOpen() {
+  private dismissed=false;
+  async onOpen() {
+    this.dismissed=false;
     this.modalEl.addClass('bujo-lineage-modal');
     this.titleEl.setText(this.action==='migrate'?'Migrate task':'Schedule for later');
-    let destination=''; try {destination=this.action==='migrate'?this.controller.tomorrow():this.controller.future();} catch { /* custom path remains available */ }
+    let destination='',destinationError=''; try {destination=this.action==='migrate'?await this.controller.tomorrow():this.controller.future();} catch(error) {destinationError=String(error);}
+    if(this.dismissed)return;
+    if(destinationError)this.contentEl.createEl('p',{text:destinationError,attr:{role:'alert'}});
     let reason='',date=''; let running=false;
     this.contentEl.createEl('p',{text:'Search existing notes or enter a new note path. Existing folders only. Moving to tomorrow does not set a due date. Attached child content moves with the task.'});
     const list=this.contentEl.createEl('div');
@@ -158,5 +169,5 @@ class TransferModal extends Modal {
       try {await this.controller.transfer(this.source,this.task,destination,this.action,reason,date);this.close();} catch(e) {error.setText(String(e)+(this.controller.hasPending()?' Pending operation saved. Use Recover pending transfers; do not start another transfer.':''));} finally {running=false;b.setDisabled(false);}
     }));
   }
-  onClose(){this.contentEl.empty();}
+  onClose(){this.dismissed=true;this.contentEl.empty();}
 }

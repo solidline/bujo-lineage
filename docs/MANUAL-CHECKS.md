@@ -54,3 +54,7 @@ Schedule a fresh task to Future Log with the date blank: source [<], destination
 ## Mobile spacing regression (0.3.6)
 
 On iPhone in Live Preview and Reading View, test open/completed/migrated tasks with links and long wrapping titles, nested tasks, and a history button. Checkbox glyphs should be compact (22px), migrated arrows should appear once, wrapped text should follow the native hanging indent, and the history control should stay inline without a large empty box. Repeat in portrait/landscape, with the default theme, and with journal styling off. No note margins outside task lists should change.
+
+## Daily Notes destination (0.3.8)
+
+Set the core Daily Notes folder to Daily Notes and choose a filename format. Keep Use core Daily Notes settings enabled in Lineage. Migrate a task and verify the tomorrow suggestion includes that folder and format and the resulting task is written there, not at the root. Change the core folder and repeat without reloading. Disable the toggle to verify explicit fallback fields. Core configuration is read-only; templates are not run and missing folders are still rejected. A custom Obsidian config directory should work too.

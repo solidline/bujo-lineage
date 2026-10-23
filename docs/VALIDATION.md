@@ -37,3 +37,5 @@ Version 0.3.5: 25 core/adapter tests (17 core, 8 adapter) and 39 browser checks 
 Version 0.3.6: 25 core/adapter tests and 44 browser checks pass. New mobile fixtures verify 22px checkbox sizing, preserved theme checkbox margins/list padding, preserved CodeMirror theme hanging indentation, non-repeating glyph masks, and compact 32px history controls. Side markers no longer consume layout width. Browser previews were regenerated; actual iPhone rendering remains unverified.
 
 Version 0.3.7 removes the vertical status stripe. The browser suite now passes 45 checks, including stripe absence and preserved done/migrated text colors. All 25 core/adapter tests, build, lint, and type checking pass.
+
+Version 0.3.8: 29 core/adapter tests (17 core + 12 adapter) and 45 browser checks pass. Destination regressions cover core Daily Notes folder/format, nested date paths, custom config directories, manual overrides, missing-file fallback, explicit core root defaults, malformed settings, and a complete transfer to the resolved folder with no root copy. Local calendar/DST tests remain covered. Real Obsidian/iPhone verification remains necessary.
