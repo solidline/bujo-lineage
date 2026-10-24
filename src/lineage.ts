@@ -52,7 +52,12 @@ export function selected(text: string, line: number): Task {
 export function capture(text:string,line:number):Task {
   assertCaptureContext(text,line);
   const existing=tasks(text).find(task=>task.start===line);
-  if(existing)return existing;
+  if(existing) {
+    // An explicit transfer may turn an event into a new open task. Keep the
+    // original [o] snapshot for cancellation, compare-and-swap, and recovery.
+    if(existing.status==='o')return {...existing,status:' ',line:existing.line.replace(/^(\s*(?:[-+*]|\d+[.)]) \[)o(\])/, '$1 $2')};
+    return existing;
+  }
   const lines=text.split('\n');
   if(!lines[line].trim())throw Error('Enter task text before migrating or scheduling.');
   const original=lines[line];

@@ -99,7 +99,7 @@ test('migration to resolved tomorrow writes inside the Daily Notes folder, not v
 
 
 test('actual adapter migrates and schedules explicit plain captures, preserving stale-modal checks',async()=> {
- for(const raw of ['Task line','- Task line']) {
+ for(const raw of ['Task line','- Task line','- [o] Event line']) {
   for(const action of ['migrate','schedule'] as const) {
    const f=fixture();f.files.set('Daily/A.md',raw);await f.controller.start();const t=capture(raw,0);
    await f.controller.transfer('Daily/A.md',t,'Other/Note.md',action,'');

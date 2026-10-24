@@ -163,6 +163,7 @@ class TransferModal extends Modal {
     if(destinationError)this.contentEl.createEl('p',{text:destinationError,attr:{role:'alert'}});
     let reason='',date=''; let running=false;
     this.contentEl.createEl('p',{text:'Search existing notes or enter a new note path. Existing folders only. Moving to tomorrow does not set a due date. Attached child content moves with the task. Plain text or bullets become checkbox tasks only when the transfer succeeds.'});
+    if(/^\s*(?:[-+*]|\d+[.)]) \[o\]/.test(this.task.raw.split('\n')[0])) this.contentEl.createEl('p',{text:'This event will become an open task at the destination. The source is archived only after a successful transfer; Cancel leaves the event unchanged.'});
     const list=this.contentEl.createEl('div');
     const render=(filter:string)=> {list.empty(); const files=this.app.vault.getMarkdownFiles().filter(f=>f.path!==this.source && f.path.toLowerCase().includes(filter.toLowerCase())).slice(0,12);for(const f of files){const b=list.createEl('button',{text:f.path});b.onclick=()=>{destination=f.path;input.setValue(destination);list.empty();};}};
     let input:import('obsidian').TextComponent;

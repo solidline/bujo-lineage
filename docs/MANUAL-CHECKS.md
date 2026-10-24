@@ -70,3 +70,7 @@ With Tasks and journal styling enabled, create - [o] Firestone event and a separ
 ## Plain capture (0.3.12)
 
 Try Task line, - Task line, and - [ ] Task line with Migrate task and Schedule for later. Cancel first and confirm no note text changed, then commit and verify historical source/open destination, count 0/1, children, tags, and anchors. Edit the source while the modal is open and verify rejection without task writes. Check Set current line as event on plain text/bullets. View task history on an untouched plain line should explain that history starts at the first transfer. Recovery remains journal-based, not cursor-based.
+
+## Event-to-task transfer (0.3.13)
+
+On a `[o]` event, run Migrate task and verify the conversion explanation in the destination modal. Cancel once: the event must remain `[o]`. Commit: source `[>]`, destination `[ ]`, correct folder, preserved content/anchor, count 0/1, reciprocal history. Repeat with Schedule for later and blank optional date: source `[<]`, destination `[ ]`. Completed/cancelled/archived tasks and unsafe Tasks fields must still reject.

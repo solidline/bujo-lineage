@@ -150,3 +150,19 @@ test('capture rejects unsafe contexts and plain-source child edits remain protec
  const io={...f.io,update:async(path:string,fn:(s:string)=>string)=>{await f.io.update(path,fn);if(path==='Folder/B.md')f.files.set('Daily/A.md','Task\n  - [ ] new child');}};
  await assert.rejects(new Engine([],io).run(p),/Source changed/);assert.equal(f.files.get('Daily/A.md'),'Task\n  - [ ] new child');
 });
+
+
+test('explicit event migration and scheduling convert on commit while preserving original event snapshots',async()=> {
+ for(const action of ['migrate','schedule'] as const) {
+  const raw='- [o] Firestone event #car ^event-original\n  Bring paperwork';const f=fixture(raw);const t=capture(raw,0);
+  assert.equal(t.raw,raw);assert.equal(f.files.get('Daily/A.md'),raw);assert.equal(f.saves,0);
+  const p=plan(t,'Daily/A.md','Folder/B.md',action,'',undefined,link);await new Engine([],f.io).run(p);
+  const source=tasks(f.files.get('Daily/A.md')!)[0],destination=tasks(f.files.get('Folder/B.md')!)[0];
+  assert.equal(source.status,action==='migrate'?'>':'<');assert.equal(source.block,'event-original');assert.equal(destination.status,' ');assert.equal(destination.meta!.count,1);assert.equal(source.meta!.lineage,destination.meta!.lineage);assert.match(destination.raw,/Bring paperwork/);assert.match(destination.raw,/#car/);
+ }
+});
+test('event conversion survives source write failure and restart without another destination',async()=> {
+ const raw='- [o] Meeting';const f=fixture(raw);const p=plan(capture(raw,0),'Daily/A.md','Folder/B.md','migrate','',undefined,link);
+ f.fail('Daily/A.md');await assert.rejects(new Engine([],f.io).run(p));assert.equal(f.files.get('Daily/A.md'),raw);
+ f.fail('');const engine=new Engine(f.journal,f.io);await engine.run(engine.journal[0]);await engine.run(engine.journal[0]);assert.equal(tasks(f.files.get('Folder/B.md')!).length,1);assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,'>');
+});
