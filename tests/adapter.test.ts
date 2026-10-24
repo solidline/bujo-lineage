@@ -58,7 +58,7 @@ test('add-on entrypoint registers only lineage commands with an optional appeara
    registerMarkdownPostProcessor:()=>{renderers++;},
  });
  await addon.onload();
- assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','view-task-history']);
+ assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','set-current-line-as-event','view-task-history']);
  assert.equal(renderers,1);
 });
 

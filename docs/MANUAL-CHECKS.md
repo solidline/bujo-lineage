@@ -4,7 +4,7 @@ Use a disposable vault and record Obsidian/Tasks versions and OS. Copy sample-va
 
 ## Desktop
 
-1. Install dist/bujo-lineage, keep BuJo Bullets enabled, reload, and enable BuJo Lineage alongside it. Confirm only four Lineage commands (migrate, schedule, history, recovery), with no duplicated status commands. Confirm ! / ? signifiers and all six checkbox styles still come from BuJo Bullets; confirm [-] is cancelled, not a note.
+1. Install dist/bujo-lineage, keep BuJo Bullets enabled, reload, and enable BuJo Lineage alongside it. Confirm the Lineage commands (migrate, schedule, history, recovery, and set current line as event), with no duplicated status commands. Confirm ! / ? signifiers and all six checkbox styles still come from BuJo Bullets; confirm [-] is cancelled, not a note.
 2. Make an unsaved daily task with a due date, tags, !, and two indented subtasks. Run Migrate task. Cancel once; inspect source/destination to confirm no IDs or files were added.
 3. Repeat, search a full note path containing spaces, choose it, supply a multiline reason containing `-->`, and transfer. Confirm source [>], destination [ ], count 0/1, unchanged due date and exactly one set of actionable children. Confirm final block IDs in source mode and click each link in Reading View and Live Preview.
 4. Repeat on the destination after renaming its wording. Schedule to Future Log with a valid date; expect source [<], current [ ], count 2, exactly one scheduled field and original due date. Confirm no reminder notification was promised.
@@ -58,3 +58,7 @@ On iPhone in Live Preview and Reading View, test open/completed/migrated tasks w
 ## Daily Notes destination (0.3.8)
 
 Set the core Daily Notes folder to Daily Notes and choose a filename format. Keep Use core Daily Notes settings enabled in Lineage. Migrate a task and verify the tomorrow suggestion includes that folder and format and the resulting task is written there, not at the root. Change the core folder and repeat without reloading. Disable the toggle to verify explicit fallback fields. Core configuration is read-only; templates are not run and missing folders are still rejected. A custom Obsidian config directory should work too.
+
+## Event command (0.3.9)
+
+Search Set current line as event in the command palette and Settings → Hotkeys. Bind a shortcut, convert ordinary text, a bullet, and an open untracked task, and verify - [o] with intact child notes/tags/anchors. Confirm tracked, archived, done, cancelled, recurring and dependency-bearing tasks and fenced examples reject without edits. Add the command to the iPhone toolbar and test by tap.

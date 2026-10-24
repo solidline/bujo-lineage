@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.8.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.9.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.8.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.9.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -42,6 +42,12 @@ Highlighting works in rendered notes and in the CodeMirror editor. Task decorati
 
 See [light preview](docs/appearance-light.png), [dark preview](docs/appearance-dark.png), or [the standalone preview](docs/appearance-preview.html). These are representative browser renders, not live Obsidian screenshots. Actual iPhone/Obsidian appearance and third-party theme combinations still need the manual checklist.
 
+## Event capture shortcut
+
+Run **BuJo Lineage: Set current line as event** from the command palette. It converts plain text, a bullet, or an untracked open task to `- [o]`, keeping its wording, indentation, list marker, tags, block anchor, and attached child lines. An existing event is unchanged. Closed/archived tasks, lineage-bearing tasks, recurring/dependency-bearing tasks, fenced code, and frontmatter are rejected; capture a separate event instead of converting an existing commitment with history.
+
+To assign a keyboard shortcut, open **Settings → Hotkeys**, search **Set current line as event**, and choose your keys. No default binding is installed, avoiding conflicts with your existing shortcuts. On iPhone, add that command under **Settings → Mobile → toolbar options**. This helper is provided directly by Lineage, independently of which commands BuJo Bullets exposes in your installation.
+
 ## Everyday use
 
 Capture `- [ ] ! Book car service #home`. Place the cursor on that parent line and run **Migrate task**. Search existing Markdown paths, tap a result, or enter a new note path. The initial suggestion is tomorrow's daily note. Enter an optional reason and tap **Transfer task**. Cancel or dismiss the modal to leave the vault unchanged.
@@ -64,7 +70,7 @@ BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the manual
 | `- [o]` | Event |
 | `- Some note` | Ordinary note, not a checkbox task |
 
-Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage does not register status commands or modify BuJo Bullets settings. Its optional appearance layer adds colors, spacing, and touch sizing without changing the status symbols.
+Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage provides one event-capture helper, and does not modify BuJo Bullets settings or duplicate its full status command set. Its optional appearance layer adds colors, spacing, and touch sizing without changing the status symbols.
 
 ## Settings and destination rules
 

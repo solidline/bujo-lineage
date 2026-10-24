@@ -1,3 +1,4 @@
+import {eventLine} from '../src/event-command';
 import moment from 'moment';
 import { tomorrowPath } from '../src/daily';
 import {readFileSync} from 'node:fs';
@@ -111,4 +112,19 @@ test('blank schedule date preserves existing dates; a supplied replacement remai
   assert.match(p.destination,/⏳ 2026-11-02/);assert.match(p.destination,/📅 2026-11-10/);assert.equal((p.destination.match(/⏳/g)||[]).length,1);
  }
  const p=make(text,undefined,undefined,'schedule','2026-11-03');assert.match(p.destination,/⏳ 2026-11-03/);assert.equal((p.destination.match(/⏳/g)||[]).length,1);
+});
+
+
+test('event capture converts text/bullets/open checkboxes and preserves anchors and children',()=> {
+ assert.equal(eventLine('Coffee with Maya',0),'- [o] Coffee with Maya');
+ assert.equal(eventLine('',0),'- [o] ');
+ assert.equal(eventLine('- Coffee #social ^existing',0),'- [o] Coffee #social ^existing');
+ assert.equal(eventLine('  * [ ] ! Coffee ^existing\n    notes',0),'  * [o] ! Coffee ^existing');
+ assert.equal(eventLine('1. Coffee',0),'1. [o] Coffee');
+ assert.equal(eventLine('- [o] Coffee',0),'- [o] Coffee');
+});
+test('event capture rejects code, tracked/history tasks and closed statuses',()=> {
+ for(const [text,line] of [['```md\n- [ ] Example\n```',1],['~~~\ntext\n~~~',1],['---\ntitle: note\n---',1],['- [x] Done',0],['- [-] Cancelled',0],['- [>] Moved',0],['- [<] Scheduled',0],['- [ ] Recurring 🔁 every day',0],['- [ ] Dependency 🆔 abc',0],['# Heading',0]] as const)assert.throws(()=>eventLine(text,line));
+ assert.throws(()=>eventLine(make().destination,0),/lineage history/);
+ assert.equal(eventLine('```\ncode\n```\nMeeting',3),'- [o] Meeting');
 });

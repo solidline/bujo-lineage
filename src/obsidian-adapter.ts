@@ -1,5 +1,6 @@
 import { MarkdownView, Modal, Notice, Setting, TFile, TFolder, moment } from 'obsidian';
 import type BuJoPlugin from './index';
+import { eventLine } from './event-command';
 import { coreDailySettings, tomorrowPath } from './daily';
 import { blockTargets, Engine, Located, Plan, Task, history, path, plan, selected, tasks, validate } from './lineage';
 
@@ -65,6 +66,11 @@ export class LineageController {
     this.plugin.registerEvent(this.app.vault.on('create',refresh));
     this.plugin.registerEvent(this.app.vault.on('delete',f=> {this.cache.delete(f.path);this.anchors.delete(f.path);this.errors.delete(f.path);}));
     this.plugin.registerEvent(this.app.vault.on('rename',(f,old)=> {this.cache.delete(old);this.anchors.delete(old);this.errors.delete(old);refresh(f);}));
+    this.plugin.addCommand({id:'set-current-line-as-event',name:'Set current line as event',editorCallback:editor=> {
+      try {if(this.hasPending())throw Error('Resolve pending transfer recovery before changing task status.');
+        const line=editor.getCursor().line;editor.setLine(line,eventLine(editor.getValue(),line));
+      } catch(error) {this.notice(error);}
+    }});
     for(const action of ['migrate','schedule'] as const) this.plugin.addCommand({id:action+'-task',name:action==='migrate'?'Migrate task':'Schedule for later',editorCallback:(editor,view)=> {
       try { if(this.hasPending()) throw Error('A transfer needs recovery. Run Recover pending transfers.');
         if(!view.file) return; const t=selected(editor.getValue(),editor.getCursor().line);
