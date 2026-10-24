@@ -292,3 +292,48 @@ body.bujo-lineage-journal .bujo-lineage-status-open { color: var(--text-normal, 
     white-space: nowrap;
   }
 }
+
+/* Events are not completions. Override checked visuals only for the event's own control. */
+body.bujo-lineage-journal :is(
+  .markdown-rendered li[data-task="o"] > input[type="checkbox"],
+  .markdown-rendered li[data-task="o"] > p > input[type="checkbox"],
+  .markdown-source-view .bujo-lineage-status-event input[type="checkbox"],
+  .markdown-source-view input[type="checkbox"][data-task="o"]
+) {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  transform: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 2px solid var(--bl-event) !important;
+  border-radius: 50% !important;
+  box-sizing: border-box;
+  padding: 0 !important;
+  box-shadow: none !important;
+  opacity: 1;
+}
+body.bujo-lineage-journal :is(
+  .markdown-rendered li[data-task="o"] > input[type="checkbox"],
+  .markdown-rendered li[data-task="o"] > p > input[type="checkbox"],
+  .markdown-source-view .bujo-lineage-status-event input[type="checkbox"],
+  .markdown-source-view input[type="checkbox"][data-task="o"]
+)::after,
+body.bujo-lineage-journal :is(
+  .markdown-rendered li[data-task="o"] > input[type="checkbox"],
+  .markdown-rendered li[data-task="o"] > p > input[type="checkbox"],
+  .markdown-source-view .bujo-lineage-status-event input[type="checkbox"],
+  .markdown-source-view input[type="checkbox"][data-task="o"]
+)::before {
+  content: none !important;
+  display: none !important;
+}
+body.bujo-lineage-journal .markdown-rendered li[data-task="o"],
+body.bujo-lineage-journal .markdown-rendered li[data-task="o"] > :is(p, .tasks-list-text),
+body.bujo-lineage-journal .markdown-source-view .bujo-lineage-status-event,
+body.bujo-lineage-journal .markdown-source-view .bujo-lineage-status-event :is(.cm-strikethrough, .cm-hmd-internal-link) {
+  text-decoration: none !important;
+  color: var(--bl-event) !important;
+  opacity: 1;
+}

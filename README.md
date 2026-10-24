@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.10.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.11.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.10.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.11.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -216,3 +216,7 @@ Checkboxes use 22px visible controls rather than scaling the native input to 44p
 ### Command toolbar icons (0.3.10)
 
 All five commands now declare native Obsidian icons: Migrate task → arrow-right; Schedule for later → calendar-clock; Set current line as event → circle; View task history → history; Recover pending transfers → rotate-ccw. Update through BRAT and reload Obsidian. If an existing mobile toolbar entry still shows a question mark, remove and re-add that command in mobile toolbar settings. Command IDs and hotkey assignments are unchanged.
+
+### Events rendered by Tasks (0.3.11)
+
+With **BuJo journal styling** enabled, `[o]` events use a hollow-circle marker rather than a filled completed checkbox, including when Tasks supplies checked styling. Event text is not struck through. This is a visual override only: checkbox state, Markdown, task data, and another plugin's configuration are not changed. In **Tasks → Statuses**, configure symbol `o` with type **NON_TASK** so queries treat events as non-tasks; visual styling alone cannot change Tasks' classification. Completed `x` tasks and completed subtasks under events retain their own styling. Disable journal styling to restore the host rendering.

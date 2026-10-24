@@ -1,11 +1,7 @@
-BuJo Lineage 0.3.10 adds native icons to all commands so mobile toolbar buttons no longer fall back to a question mark:
+BuJo Lineage 0.3.11 visually distinguishes events from completed tasks when Tasks supplies checked-checkbox styling.
 
-- Migrate task: right arrow
-- Schedule for later: calendar with clock
-- Set current line as event: circle
-- View task history: history
-- Recover pending transfers: counterclockwise arrow
+With BuJo journal styling enabled, [o] events show a hollow circle, without a completion checkmark or strike-through. The event's own checkbox is targeted, leaving completed child tasks intact. The underlying Markdown, checkbox state, and Tasks settings are unchanged.
 
-Update through BRAT and reload Obsidian. If a saved mobile toolbar button still shows a question mark, remove and re-add that command. Command IDs, hotkeys, task data, and behavior are unchanged.
+For query semantics, manually configure symbol o as NON_TASK in Tasks → Statuses. A visual override cannot change Tasks' status classification. Disabling journal styling restores the host rendering.
 
-Type checking, lint, build, 31 core/adapter tests and 45 browser checks passed. Actual iPhone toolbar appearance remains unverified.
+Update through BRAT and reload Obsidian. 31 core/adapter tests, 51 Chromium checks, type checking, lint, and build pass. Browser fixtures simulate Tasks styling; live Tasks/Obsidian/iPhone rendering still needs verification.

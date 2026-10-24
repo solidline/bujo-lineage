@@ -62,3 +62,7 @@ Set the core Daily Notes folder to Daily Notes and choose a filename format. Kee
 ## Event command (0.3.9)
 
 Search Set current line as event in the command palette and Settings → Hotkeys. Bind a shortcut, convert ordinary text, a bullet, and an open untracked task, and verify - [o] with intact child notes/tags/anchors. Confirm tracked, archived, done, cancelled, recurring and dependency-bearing tasks and fenced examples reject without edits. Add the command to the iPhone toolbar and test by tap.
+
+## Tasks event appearance (0.3.11)
+
+With Tasks and journal styling enabled, create - [o] Firestone event and a separate - [x] completed task. Confirm the event is an empty circle without a checkmark/strike-through in Live Preview and Reading View, while the completed task remains checked. Add a completed child task under the event and verify it is not restyled as an event. Toggle journal styling off/on. In Tasks settings, manually set o to NON_TASK and verify queries reflect that classification. No plugin settings should be modified by Lineage.
