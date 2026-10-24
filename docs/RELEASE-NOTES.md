@@ -1,9 +1,11 @@
-BuJo Lineage 0.3.9 adds a directly available event-capture command:
+BuJo Lineage 0.3.10 adds native icons to all commands so mobile toolbar buttons no longer fall back to a question mark:
 
-**BuJo Lineage: Set current line as event**
+- Migrate task: right arrow
+- Schedule for later: calendar with clock
+- Set current line as event: circle
+- View task history: history
+- Recover pending transfers: counterclockwise arrow
 
-Use it on ordinary text, a bullet, a blank line, or an untracked open task to create - [o]. Wording, indentation, tags, anchors and child content are preserved. Already tracked commitments, closed/archived tasks, recurring/dependency-bearing tasks, fenced code and frontmatter are rejected without edits.
+Update through BRAT and reload Obsidian. If a saved mobile toolbar button still shows a question mark, remove and re-add that command. Command IDs, hotkeys, task data, and behavior are unchanged.
 
-After updating through BRAT and reloading, open Settings → Hotkeys and search Set current line as event to assign a shortcut. On iPhone, add the command to the mobile toolbar. No default hotkey is assigned, avoiding shortcut conflicts. The helper does not require a corresponding command from BuJo Bullets.
-
-31 core/adapter tests and 45 browser checks pass, plus type checking, lint, and build. Actual keyboard/mobile-toolbar behavior still requires verification in Obsidian.
+Type checking, lint, build, 31 core/adapter tests and 45 browser checks passed. Actual iPhone toolbar appearance remains unverified.

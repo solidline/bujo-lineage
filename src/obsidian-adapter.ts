@@ -66,20 +66,20 @@ export class LineageController {
     this.plugin.registerEvent(this.app.vault.on('create',refresh));
     this.plugin.registerEvent(this.app.vault.on('delete',f=> {this.cache.delete(f.path);this.anchors.delete(f.path);this.errors.delete(f.path);}));
     this.plugin.registerEvent(this.app.vault.on('rename',(f,old)=> {this.cache.delete(old);this.anchors.delete(old);this.errors.delete(old);refresh(f);}));
-    this.plugin.addCommand({id:'set-current-line-as-event',name:'Set current line as event',editorCallback:editor=> {
+    this.plugin.addCommand({id:'set-current-line-as-event',icon:'circle',name:'Set current line as event',editorCallback:editor=> {
       try {if(this.hasPending())throw Error('Resolve pending transfer recovery before changing task status.');
         const line=editor.getCursor().line;editor.setLine(line,eventLine(editor.getValue(),line));
       } catch(error) {this.notice(error);}
     }});
-    for(const action of ['migrate','schedule'] as const) this.plugin.addCommand({id:action+'-task',name:action==='migrate'?'Migrate task':'Schedule for later',editorCallback:(editor,view)=> {
+    for(const action of ['migrate','schedule'] as const) this.plugin.addCommand({id:action+'-task',icon:action==='migrate'?'arrow-right':'calendar-clock',name:action==='migrate'?'Migrate task':'Schedule for later',editorCallback:(editor,view)=> {
       try { if(this.hasPending()) throw Error('A transfer needs recovery. Run Recover pending transfers.');
         if(!view.file) return; const t=selected(editor.getValue(),editor.getCursor().line);
         if(t.meta?.next) { const m=new Modal(this.app);m.titleEl.setText('This occurrence has moved');new Setting(m.contentEl).setDesc('Open its successor or inspect the complete task history.').addButton(b=>b.setButtonText('Open successor').onClick(()=>{void this.openOccurrence(t.meta!.next!);m.close();})).addButton(b=>b.setButtonText('View history').onClick(()=>{void this.showHistory(t);m.close();}));m.open();return; }
         validate(t); new TransferModal(this,view.file.path,t,action).open();
       } catch(e) {this.notice(e);}
     }});
-    this.plugin.addCommand({id:'view-task-history',name:'View task history',editorCallback:(editor)=> {try { const t=selected(editor.getValue(),editor.getCursor().line); void this.showHistory(t); } catch(e){this.notice(e);} }});
-    this.plugin.addCommand({id:'recover-pending-transfers',name:'Recover pending transfers',callback:()=>this.recoveryModal()});
+    this.plugin.addCommand({id:'view-task-history',icon:'history',name:'View task history',editorCallback:(editor)=> {try { const t=selected(editor.getValue(),editor.getCursor().line); void this.showHistory(t); } catch(e){this.notice(e);} }});
+    this.plugin.addCommand({id:'recover-pending-transfers',icon:'rotate-ccw',name:'Recover pending transfers',callback:()=>this.recoveryModal()});
     this.app.workspace.onLayoutReady(()=> { void this.rebuild().then(()=>this.recover()); });
   }
   views(p:string):MarkdownView[] { return this.app.workspace.getLeavesOfType('markdown').map(l=>l.view).filter((v):v is MarkdownView=>v instanceof MarkdownView && v.file?.path===p); }
