@@ -74,3 +74,7 @@ Try Task line, - Task line, and - [ ] Task line with Migrate task and Schedule f
 ## Event-to-task transfer (0.3.13)
 
 On a `[o]` event, run Migrate task and verify the conversion explanation in the destination modal. Cancel once: the event must remain `[o]`. Commit: source `[>]`, destination `[ ]`, correct folder, preserved content/anchor, count 0/1, reciprocal history. Repeat with Schedule for later and blank optional date: source `[<]`, destination `[ ]`. Completed/cancelled/archived tasks and unsafe Tasks fields must still reject.
+
+## All entry transitions (0.4.0)
+
+Use docs/TRANSITIONS.md as the checklist for every source and target. Verify all five separate type commands appear in the palette, Hotkeys settings and mobile toolbar with icons. On a current tracked entry, toggle through note/event/completed/cancelled/open and verify IDs, dates, children and history survive every change and restart. An archived occurrence must remain untouched and offer Open successor. Repeat Migrate/Schedule from each current type and verify real transfer/count/recovery behavior, optional dates, and cancellation. In-place commands are syntax edits, not Tasks completion automation.

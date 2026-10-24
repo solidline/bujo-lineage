@@ -3,6 +3,7 @@ import {journalHighlights} from '../src/editor-highlights';
 import {EditorView} from '@codemirror/view';
 import {EditorState,StateField,StateEffect} from '@codemirror/state';
 import {metadataPreview} from '../src/metadata-preview';
+import {changeEntryType} from '../src/entry-types';
 import {encode} from '../src/lineage';
 import {markdown} from '@codemirror/lang-markdown';
 const results:string[]=[];
@@ -94,6 +95,10 @@ try {
   check(opened===compact.state.doc.toString() && compact.state.doc.toString().includes(encode(record)),'editing task wording preserves metadata and history button targeting');
   compact.dispatch({effects:mode.of(false)});
   check(!host.querySelector('.bujo-lineage-history-chip') && host.textContent!.includes('%7B'),'Source mode reveals original raw metadata for inspection');
+  const trackedNote=changeEntryType(raw,0,'note');
+  compact.dispatch({changes:{from:0,to:compact.state.doc.length,insert:trackedNote},effects:mode.of(true)});
+  check(host.querySelectorAll('.bujo-lineage-history-chip').length===1 && !host.querySelector('.cm-content')!.textContent!.includes('%7B'),'tracked ordinary notes retain compact Live Preview history metadata');
+  check(compact.state.doc.toString()===trackedNote,'note history rendering preserves the exact stored metadata and anchor');
   const invalid=raw.replace(encode(record),'<!--bujo-lineage:broken-->');
   compact.dispatch({changes:{from:0,to:compact.state.doc.length,insert:invalid},effects:mode.of(true)});
   check(!host.querySelector('.bujo-lineage-history-chip') && host.textContent!.includes('bujo-lineage:broken'),'malformed metadata remains visible for repair');

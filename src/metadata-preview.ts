@@ -23,9 +23,9 @@ function hiddenMetadata(view:EditorView,live:(state:EditorState)=>boolean,open?:
   for(const visible of view.visibleRanges) {
     for(let position=visible.from;position<=visible.to;) {
       const line=view.state.doc.lineAt(position);
-      if(!seen.has(line.number) && /^\s*(?:[-+*]|\d+[.)]) \[.\] /.test(line.text)) {
+      if(!seen.has(line.number) && /^\s*(?:[-+*]|\d+[.)]) /.test(line.text) && line.text.includes('<!--bujo-lineage:')) {
         seen.add(line.number);
-        let node=syntaxTree(view.state).resolveInner(line.from+line.text.search(/\[[^\]]\]/),1);let code=false;
+        let node=syntaxTree(view.state).resolveInner(line.from+line.text.search(/\S/),1);let code=false;
         for(;;) {if(/code|comment|frontmatter/i.test(node.name))code=true;if(!node.parent)break;node=node.parent;}
         if(!code) {
           try {

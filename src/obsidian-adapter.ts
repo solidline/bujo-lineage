@@ -1,14 +1,16 @@
-import { MarkdownView, Modal, Notice, Setting, TFile, TFolder, moment } from 'obsidian';
+import { Editor, MarkdownView, Modal, Notice, Setting, TFile, TFolder, moment } from 'obsidian';
 import type BuJoPlugin from './index';
-import { eventLine } from './event-command';
+import { ArchivedEntryError, changeEntryType } from './entry-types';
+import type { EntryTarget } from './entry-syntax';
 import { coreDailySettings, tomorrowPath } from './daily';
-import { blockTargets, capture, sourceMatches, Engine, Located, Plan, Task, history, path, plan, tasks, validate } from './lineage';
+import { blockTargets, capture, sourceMatches, Engine, Located, Plan, Task, history, decode, path, plan, tasks, validate } from './lineage';
 
 export class LineageController {
   engine: Engine;
   cache=new Map<string,Located[]>();
   anchors=new Map<string,string[]>();
   errors=new Map<string,string>();
+  private changingEntry=false;
   private writeQueue:Promise<void>=Promise.resolve();
   constructor(private plugin:BuJoPlugin) {}
   get app() { return this.plugin.app; }
@@ -66,21 +68,53 @@ export class LineageController {
     this.plugin.registerEvent(this.app.vault.on('create',refresh));
     this.plugin.registerEvent(this.app.vault.on('delete',f=> {this.cache.delete(f.path);this.anchors.delete(f.path);this.errors.delete(f.path);}));
     this.plugin.registerEvent(this.app.vault.on('rename',(f,old)=> {this.cache.delete(old);this.anchors.delete(old);this.errors.delete(old);refresh(f);}));
-    this.plugin.addCommand({id:'set-current-line-as-event',icon:'circle',name:'Set current line as event',editorCallback:editor=> {
-      try {if(this.hasPending())throw Error('Resolve pending transfer recovery before changing task status.');
-        const line=editor.getCursor().line;editor.setLine(line,eventLine(editor.getValue(),line));
-      } catch(error) {this.notice(error);}
-    }});
+    for(const [target,id,name,icon] of [
+      ['open','set-current-line-as-open-task','Set current line as open task','square'],
+      ['completed','set-current-line-as-completed','Set current line as completed','check-square'],
+      ['cancelled','set-current-line-as-cancelled','Set current line as cancelled','ban'],
+      ['event','set-current-line-as-event','Set current line as event','circle'],
+      ['note','set-current-line-as-note','Set current line as note','sticky-note'],
+    ] as const) this.plugin.addCommand({id,name,icon,editorCallback:editor=>{void this.setEntry(editor,target);}});
     for(const action of ['migrate','schedule'] as const) this.plugin.addCommand({id:action+'-task',icon:action==='migrate'?'arrow-right':'calendar-clock',name:action==='migrate'?'Migrate task':'Schedule for later',editorCallback:(editor,view)=> {
       try { if(this.hasPending()) throw Error('A transfer needs recovery. Run Recover pending transfers.');
         if(!view.file) return; const t=capture(editor.getValue(),editor.getCursor().line);
-        if(t.meta?.next) { const m=new Modal(this.app);m.titleEl.setText('This occurrence has moved');new Setting(m.contentEl).setDesc('Open its successor or inspect the complete task history.').addButton(b=>b.setButtonText('Open successor').onClick(()=>{void this.openOccurrence(t.meta!.next!);m.close();})).addButton(b=>b.setButtonText('View history').onClick(()=>{void this.showHistory(t);m.close();}));m.open();return; }
+        if(t.meta?.next) {this.offerSuccessor(t.meta.next,t);return;}
         validate(t); new TransferModal(this,view.file.path,t,action).open();
       } catch(e) {this.notice(e);}
     }});
     this.plugin.addCommand({id:'view-task-history',icon:'history',name:'View task history',editorCallback:(editor)=> {try { const t=capture(editor.getValue(),editor.getCursor().line); void this.showHistory(t); } catch(e){this.notice(e);} }});
     this.plugin.addCommand({id:'recover-pending-transfers',icon:'rotate-ccw',name:'Recover pending transfers',callback:()=>this.recoveryModal()});
     this.app.workspace.onLayoutReady(()=> { void this.rebuild().then(()=>this.recover()); });
+  }
+  offerSuccessor(next:string,task?:Task) {
+    const modal=new Modal(this.app);modal.titleEl.setText('This occurrence has moved');
+    const setting=new Setting(modal.contentEl).setDesc('This historical occurrence stays unchanged. Open its successor to change the current entry.');
+    setting.addButton(button=>button.setButtonText('Open successor').onClick(()=>{void this.openOccurrence(next);modal.close();}));
+    if(task)setting.addButton(button=>button.setButtonText('View history').onClick(()=>{void this.showHistory(task);modal.close();}));
+    setting.addButton(button=>button.setButtonText('Cancel').onClick(()=>modal.close()));modal.open();
+  }
+  async setEntry(editor:Editor,target:EntryTarget):Promise<void> {
+    if(this.changingEntry)return;
+    this.changingEntry=true;
+    try {
+      if(this.hasPending())throw Error('Resolve pending transfer recovery before changing entry type.');
+      const snapshot=editor.getValue(),line=editor.getCursor().line;
+      const next=changeEntryType(snapshot,line,target);
+      if(next===editor.getLine(line))return;
+      const meta=decode(snapshot.split('\n')[line]);
+      if(meta && target==='open') {
+        await this.rebuild();
+        if(this.errors.size)throw Error('Repair malformed lineage metadata before reopening a tracked entry.');
+        if(this.entries().filter(entry=>entry.task.meta?.occurrence===meta.occurrence).length>1)throw Error('Duplicate occurrence detected. Resolve the conflict in task history before reopening it.');
+        if(this.entries().some(entry=>entry.task.meta?.lineage===meta.lineage && entry.task.meta.occurrence!==meta.occurrence && entry.task.status===' '))throw Error('Another open occurrence exists. Open task history and resolve the branch before reopening this entry.');
+      }
+      if(this.hasPending())throw Error('A transfer now needs recovery; the entry was left unchanged.');
+      if(editor.getValue()!==snapshot)throw Error('The note changed while checking its history. Run the command again.');
+      editor.setLine(line,next);
+    } catch(error) {
+      if(error instanceof ArchivedEntryError)this.offerSuccessor(error.successor);
+      else this.notice(error);
+    } finally {this.changingEntry=false;}
   }
   views(p:string):MarkdownView[] { return this.app.workspace.getLeavesOfType('markdown').map(l=>l.view).filter((v):v is MarkdownView=>v instanceof MarkdownView && v.file?.path===p); }
   async read(f:TFile):Promise<string> { return this.views(f.path)[0]?.editor.getValue() ?? await this.app.vault.read(f); }
@@ -147,7 +181,7 @@ export class LineageController {
       const h=history(this.entries(),t.meta.lineage);
       for(const row of h.rows) if([...this.anchors.values()].flat().filter(id=>id===row.task.block).length>1) h.issues.push('Duplicate block target '+row.task.block);
       for(const issue of [...h.issues,...[...this.errors].map(([p,e])=>p+': '+e)]) modal.contentEl.createEl('p',{text:issue,cls:'bujo-lineage-warning'});
-      for(const e of h.rows) {const m=e.task.meta!; new Setting(modal.contentEl).setName(e.path+' · ['+e.task.status+'] · count '+m.count).setDesc(m.action+' · '+m.timestamp+(m.reason?' · '+m.reason:'')).addButton(b=>b.setButtonText('Open occurrence').onClick(()=> {void this.openOccurrence(m.occurrence);modal.close();}));}
+      for(const e of h.rows) {const m=e.task.meta!; new Setting(modal.contentEl).setName(e.path+' · '+(e.task.status==='note'?'note':'['+e.task.status+']')+' · count '+m.count).setDesc(m.action+' · '+m.timestamp+(m.reason?' · '+m.reason:'')).addButton(b=>b.setButtonText('Open occurrence').onClick(()=> {void this.openOccurrence(m.occurrence);modal.close();}));}
     } modal.open();
   }
 }
@@ -163,7 +197,9 @@ class TransferModal extends Modal {
     if(destinationError)this.contentEl.createEl('p',{text:destinationError,attr:{role:'alert'}});
     let reason='',date=''; let running=false;
     this.contentEl.createEl('p',{text:'Search existing notes or enter a new note path. Existing folders only. Moving to tomorrow does not set a due date. Attached child content moves with the task. Plain text or bullets become checkbox tasks only when the transfer succeeds.'});
-    if(/^\s*(?:[-+*]|\d+[.)]) \[o\]/.test(this.task.raw.split('\n')[0])) this.contentEl.createEl('p',{text:'This event will become an open task at the destination. The source is archived only after a successful transfer; Cancel leaves the event unchanged.'});
+    const originalStatus=this.task.raw.split('\n')[0].match(/^\s*(?:[-+*]|\d+[.)]) \[([xo-])\]/)?.[1];
+    const originalType=originalStatus && ({x:'completed task',o:'event','-':'cancelled task'} as Record<string,string>)[originalStatus];
+    if(originalType)this.contentEl.createEl('p',{text:'This '+originalType+' will become an open task at the destination. The source is archived only after a successful transfer; Cancel leaves it unchanged.'});
     const list=this.contentEl.createEl('div');
     const render=(filter:string)=> {list.empty(); const files=this.app.vault.getMarkdownFiles().filter(f=>f.path!==this.source && f.path.toLowerCase().includes(filter.toLowerCase())).slice(0,12);for(const f of files){const b=list.createEl('button',{text:f.path});b.onclick=()=>{destination=f.path;input.setValue(destination);list.empty();};}};
     let input:import('obsidian').TextComponent;

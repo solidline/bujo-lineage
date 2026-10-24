@@ -2,8 +2,9 @@ import moment from 'moment';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { LineageController } from '../src/obsidian-adapter';
-import { capture,selected,tasks } from '../src/lineage';
+import { capture,selected,tasks,plan } from '../src/lineage';
 import { MarkdownView,MockEditor,TFile,TFolder } from './obsidian-mock';
+import type { Editor } from 'obsidian';
 import type BuJoPlugin from '../src/index';
 function fixture(){
  const files=new Map([['Daily/A.md','- [ ] Capture'],['Other/Note.md',''],['Daily/Note.md','']]);
@@ -58,7 +59,7 @@ test('add-on entrypoint registers only lineage commands with an optional appeara
    registerMarkdownPostProcessor:()=>{renderers++;},
  });
  await addon.onload();
- assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','set-current-line-as-event','view-task-history']);
+ assert.deepEqual(commands.sort(),['migrate-task','recover-pending-transfers','schedule-task','set-current-line-as-cancelled','set-current-line-as-completed','set-current-line-as-event','set-current-line-as-note','set-current-line-as-open-task','view-task-history']);
  assert.equal(renderers,1);
 });
 
@@ -108,4 +109,31 @@ test('actual adapter migrates and schedules explicit plain captures, preserving 
  }
  const f=fixture();f.files.set('Daily/A.md','Task line');await f.controller.start();const t=capture('Task line',0);f.files.set('Daily/A.md','Task line edited');
  await assert.rejects(f.controller.transfer('Daily/A.md',t,'Other/Note.md','migrate',''),/Source changed/);assert.equal(f.files.get('Other/Note.md'),'');
+});
+
+
+test('actual type commands support all plain/current types without touching child content',async()=> {
+ const f=fixture();await f.controller.start();const view=f.open('Daily/A.md','- [x] Example\n  Child note');
+ for(const target of ['open','completed','cancelled','event','note','open'] as const) {
+  await f.controller.setEntry(view.editor as unknown as Editor,target);assert.match(view.editor.getValue(),/\n  Child note$/);
+ }
+ assert.equal(tasks(view.editor.getValue())[0].status,' ');
+});
+test('actual archived type changes stop and offer successor instead of editing',async()=> {
+ const f=fixture();await f.controller.start();await f.controller.transfer('Daily/A.md',capture(f.files.get('Daily/A.md')!,0),'Other/Note.md','migrate','');
+ const before=f.files.get('Daily/A.md')!;const view=f.open('Daily/A.md');const offers:string[]=[];f.controller.offerSuccessor=(id:string)=>{offers.push(id);};
+ for(const target of ['open','completed','cancelled','event','note'] as const) await f.controller.setEntry(view.editor as unknown as Editor,target);
+ assert.equal(view.editor.getValue(),before);assert.equal(offers.length,5);assert.ok(offers.every(id=>id===tasks(before)[0].meta!.next));
+});
+test('tracked current note can reopen while another open branch prevents duplicate active tasks',async()=> {
+ const f=fixture();await f.controller.start();await f.controller.transfer('Daily/A.md',capture(f.files.get('Daily/A.md')!,0),'Other/Note.md','migrate','');const view=f.open('Other/Note.md');
+ const original=tasks(view.editor.getValue())[0].meta!;
+ await f.controller.setEntry(view.editor as unknown as Editor,'note');assert.equal(tasks(view.editor.getValue())[0].status,'note');await f.controller.rebuild();assert.ok(f.controller.entries().some(e=>e.task.status==='note'&&e.task.meta?.lineage===original.lineage));
+ await f.controller.setEntry(view.editor as unknown as Editor,'open');assert.equal(tasks(view.editor.getValue())[0].status,' ');
+ await f.controller.setEntry(view.editor as unknown as Editor,'completed');
+ const branch=plan(capture('- [ ] Other',0),'X.md','Y.md','migrate','',undefined,(p,b,a)=>`[[${p}#^${b}|${a}]]`).destination;
+ const current=tasks(branch)[0];
+ // Serialized IDs are URI-encoded, so build the conflict using the core serializer.
+ const {encode}=await import('../src/lineage');f.files.set('Daily/Note.md',branch.replace(/<!--bujo-lineage:[^]*?-->/,encode({...current.meta!,lineage:original.lineage})));
+ const before=view.editor.getValue();await f.controller.setEntry(view.editor as unknown as Editor,'open');assert.equal(view.editor.getValue(),before);
 });

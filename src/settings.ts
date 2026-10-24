@@ -46,6 +46,6 @@ export class BuJoPluginSettingTab extends PluginSettingTab {
       }));
     }
     new Setting(this.containerEl).setDesc('Fallback fields apply only when core settings are unavailable or disabled. Folders must already exist; no templates are executed.');
-    new Setting(this.containerEl).setDesc('BuJo Lineage adds task transfers and history. Keep BuJo Bullets enabled for checkbox styles, signifiers, and manual status commands. Configure symbols and signifiers in BuJo Bullets. Optional Lineage appearance does not change its commands or settings.');
+    new Setting(this.containerEl).setDesc('BuJo Lineage adds task transfers and history. Keep BuJo Bullets enabled for checkbox symbols and signifiers; use Lineage type commands for history-aware changes. Configure symbols and signifiers in BuJo Bullets. Optional Lineage appearance does not change its commands or settings.');
   }
 }

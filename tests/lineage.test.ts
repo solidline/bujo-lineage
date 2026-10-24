@@ -1,3 +1,4 @@
+import {changeEntryType,ArchivedEntryError} from '../src/entry-types';
 import {eventLine} from '../src/event-command';
 import moment from 'moment';
 import { tomorrowPath } from '../src/daily';
@@ -123,9 +124,10 @@ test('event capture converts text/bullets/open checkboxes and preserves anchors 
  assert.equal(eventLine('1. Coffee',0),'1. [o] Coffee');
  assert.equal(eventLine('- [o] Coffee',0),'- [o] Coffee');
 });
-test('event capture rejects code, tracked/history tasks and closed statuses',()=> {
- for(const [text,line] of [['```md\n- [ ] Example\n```',1],['~~~\ntext\n~~~',1],['---\ntitle: note\n---',1],['- [x] Done',0],['- [-] Cancelled',0],['- [>] Moved',0],['- [<] Scheduled',0],['- [ ] Recurring 🔁 every day',0],['- [ ] Dependency 🆔 abc',0],['# Heading',0]] as const)assert.throws(()=>eventLine(text,line));
- assert.throws(()=>eventLine(make().destination,0),/lineage history/);
+test('event capture rejects code, archived history and unsupported Tasks fields',()=> {
+ for(const [text,line] of [['```md\n- [ ] Example\n```',1],['~~~\ntext\n~~~',1],['---\ntitle: note\n---',1],['- [ ] Recurring 🔁 every day',0],['- [ ] Dependency 🆔 abc',0],['# Heading',0]] as const)assert.throws(()=>eventLine(text,line));
+ assert.throws(()=>eventLine(make().source,0),ArchivedEntryError);
+ assert.equal(tasks(eventLine(make().destination,0))[0].status,'o');
  assert.equal(eventLine('```\ncode\n```\nMeeting',3),'- [o] Meeting');
 });
 
@@ -165,4 +167,52 @@ test('event conversion survives source write failure and restart without another
  const raw='- [o] Meeting';const f=fixture(raw);const p=plan(capture(raw,0),'Daily/A.md','Folder/B.md','migrate','',undefined,link);
  f.fail('Daily/A.md');await assert.rejects(new Engine([],f.io).run(p));assert.equal(f.files.get('Daily/A.md'),raw);
  f.fail('');const engine=new Engine(f.journal,f.io);await engine.run(engine.journal[0]);await engine.run(engine.journal[0]);assert.equal(tasks(f.files.get('Folder/B.md')!).length,1);assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,'>');
+});
+
+
+const entryTargets=['open','completed','cancelled','event','note'] as const;
+const entrySymbols={open:' ',completed:'x',cancelled:'-',event:'o',note:'note'};
+const entrySources=['Example #tag ^existing','- Example #tag ^existing',...[' ','x','-','>','<','o'].map(symbol=>`- [${symbol}] Example #tag ^existing`)];
+test('all 40 untracked entry-type pairs preserve body, tags, anchors and idempotence',()=> {
+ for(const source of entrySources) for(const target of entryTargets) {
+  const result=changeEntryType(source,0,target);
+  assert.ok(result.endsWith('Example #tag ^existing'),source+' → '+target);
+  assert.equal(changeEntryType(result,0,target),result);
+  if(target==='note')assert.equal(result,'- Example #tag ^existing');
+  else assert.equal(tasks(result)[0].status,entrySymbols[target]);
+ }
+});
+test('all 16 source-to-transfer pairs keep real transfer behavior and one open destination',async()=> {
+ for(const source of entrySources) for(const action of ['migrate','schedule'] as const) {
+  const f=fixture(source);const p=plan(capture(source,0),'Daily/A.md','Folder/B.md',action,'',undefined,link);await new Engine([],f.io).run(p);
+  assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,action==='migrate'?'>':'<');assert.equal(tasks(f.files.get('Folder/B.md')!)[0].status,' ');assert.equal(tasks(f.files.get('Folder/B.md')!)[0].meta!.count,1);
+ }
+});
+test('tracked current entries toggle through all 25 type pairs including durable ordinary notes',()=> {
+ const p=make();const original=tasks(p.destination)[0].meta!;
+ for(const from of entryTargets) for(const to of entryTargets) {
+  const first=changeEntryType(p.destination,0,from);const result=changeEntryType(first,0,to);
+  const occurrence=tasks(result)[0];assert.equal(occurrence.status,entrySymbols[to]);assert.deepEqual(occurrence.meta,original);assert.equal(occurrence.block,original.occurrence);
+  assert.equal(changeEntryType(result,0,to),result);
+ }
+ assert.equal(tasks('- Just a note').length,0);
+});
+test('tracked-note history reconstructs and continues through another real transfer',async()=> {
+ const p=make();const note=changeEntryType(p.destination,0,'note');const noteTask=tasks(note)[0];
+ const h=history([{path:'A.md',task:tasks(p.source)[0]},{path:'B.md',task:noteTask}],p.lineage);assert.deepEqual(h.issues,[]);assert.equal(h.rows[1].task.status,'note');
+ const f=fixture();f.files.set('Daily/A.md',note);const next=plan(capture(note,0),'Daily/A.md','Folder/B.md','migrate','',undefined,link);await new Engine([],f.io).run(next);assert.equal(tasks(f.files.get('Folder/B.md')!)[0].meta!.count,2);assert.equal(tasks(f.files.get('Folder/B.md')!)[0].meta!.lineage,p.lineage);
+});
+test('archived occurrences block every in-place target and every transfer without changing history',()=> {
+ const p=make();for(const target of entryTargets)assert.throws(()=>changeEntryType(p.source,0,target),ArchivedEntryError);
+ for(const action of ['migrate','schedule'] as const)assert.throws(()=>plan(capture(p.source,0),'A.md','C.md',action,'',undefined,link),/successor/);
+});
+
+
+test('all 10 tracked current-type to transfer pairs retain shared identity and counts',async()=> {
+ const first=make();
+ for(const type of entryTargets)for(const action of ['migrate','schedule'] as const) {
+  const source=changeEntryType(first.destination,0,type);const f=fixture(source);
+  const next=plan(capture(source,0),'Daily/A.md','Folder/B.md',action,'',undefined,link);await new Engine([],f.io).run(next);
+  const destination=tasks(f.files.get('Folder/B.md')!)[0];assert.equal(destination.status,' ');assert.equal(destination.meta!.count,2);assert.equal(destination.meta!.lineage,first.lineage);
+ }
 });

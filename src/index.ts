@@ -6,7 +6,7 @@ import { editorLivePreviewField, Plugin } from 'obsidian';
 import { LineageController } from './obsidian-adapter';
 import { BuJoPluginSettings, BuJoPluginSettingTab, DEFAULT_SETTINGS } from './settings';
 
-/** Companion add-on: BuJo Bullets owns checkbox symbols and status commands; appearance is optional. */
+/** Companion add-on: BuJo Bullets supplies checkbox symbols; Lineage provides history-aware commands. */
 export default class BuJoLineagePlugin extends Plugin {
   settings: BuJoPluginSettings;
   lineage: LineageController;

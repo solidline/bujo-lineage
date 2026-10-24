@@ -10,13 +10,13 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.13.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.4.0.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.13.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.4.0.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
-3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
+3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it provides history-aware type commands without replacing BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
 5. On iPhone, open Settings → Mobile → Manage toolbar options (wording can vary by Obsidian version). Add **BuJo Lineage: Migrate task** and **BuJo Lineage: Schedule for later**. Optionally add **View task history**. Place the cursor on the task line before running a command.
 
@@ -36,17 +36,29 @@ In **Settings → BuJo Lineage → Appearance**, use independent appearance togg
 - **BuJo journal styling**: restrained light/dark task colors, comfortable line spacing, distinct `!`/`?` accents, scheduled and due date highlighting, quiet migration counts and previous/next links, and tags. Touch devices use compact 22-pixel checkbox controls with comfortable row spacing; native list margins and hanging indentation are preserved. Status symbols and text remain meaningful without color.
 - **Code block color styling** (off by default): optional colors and spacing only. Obsidian already provides syntax highlighting without this plugin. Enabling this setting coordinates colors and horizontally scrollable fenced code. Label code fences with a language such as `python`, `javascript`, or `json`. Unsupported languages remain plain text; this setting does not install new language parsers.
 
-The color styles follow Obsidian's light/dark mode and leave workspace panels and note backgrounds intact. The font preference is independent of both color toggles. Turn a toggle off to restore that part of your theme. BuJo Bullets still owns symbols, signifier configuration, and status commands. This optional styling is a visual layer on top, not a replacement plugin.
+The color styles follow Obsidian's light/dark mode and leave workspace panels and note backgrounds intact. The font preference is independent of both color toggles. Turn a toggle off to restore that part of your theme. BuJo Bullets still provides symbols, signifier configuration, and its original commands. This optional styling is a visual layer on top, not a replacement plugin.
 
 Highlighting works in rendered notes and in the CodeMirror editor. Task decorations exclude code/comment/frontmatter syntax nodes; they do not change Markdown, metadata, selection, checkbox behavior, or navigation handlers. No vault scan is needed for highlighting: editor decorations use visible ranges. Turning off styling removes colors immediately; unloading removes the body classes, including popout windows. Themes with unusually strong CSS overrides may require switching off one appearance toggle.
 
 See [light preview](docs/appearance-light.png), [dark preview](docs/appearance-dark.png), or [the standalone preview](docs/appearance-preview.html). These are representative browser renders, not live Obsidian screenshots. Actual iPhone/Obsidian appearance and third-party theme combinations still need the manual checklist.
 
-## Event capture shortcut
+## Entry type commands (0.4.0)
 
-Run **BuJo Lineage: Set current line as event** from the command palette. It converts plain text, a bullet, or an untracked open task to `- [o]`, keeping its wording, indentation, list marker, tags, block anchor, and attached child lines. An existing event is unchanged. Closed/archived tasks, lineage-bearing tasks, recurring/dependency-bearing tasks, fenced code, and frontmatter are rejected; capture a separate event instead of converting an existing commitment with history.
+Each type has its own command and native toolbar icon:
 
-To assign a keyboard shortcut, open **Settings → Hotkeys**, search **Set current line as event**, and choose your keys. No default binding is installed, avoiding conflicts with your existing shortcuts. On iPhone, add that command under **Settings → Mobile → toolbar options**. This helper is provided directly by Lineage, independently of which commands BuJo Bullets exposes in your installation.
+- **Set current line as open task** → `[ ]` (square)
+- **Set current line as completed** → `[x]` (checked square)
+- **Set current line as cancelled** → `[-]` (ban)
+- **Set current line as event** → `[o]` (circle)
+- **Set current line as note** → ordinary bullet (sticky note)
+
+Plain text, bullets and all standard BuJo statuses can convert among these types. Existing tracked entries keep their exact metadata, IDs, count, dates, anchors and links—even when converted to an ordinary note. Repeating the same type is a no-op. Child content is left intact. Completed/cancelled/event entries can also be transferred, becoming an open destination after confirmation.
+
+**Migrate task** and **Schedule for later** keep the real move-and-history workflow. They do not simply set a symbol. An archived occurrence with a successor stops and offers **Open successor**, rather than editing history or silently choosing another occurrence. Missing/conflicting targets and other unsafe contexts are still reported.
+
+Use **Settings → Hotkeys** to search the exact command name and bind keys, or **Settings → Mobile → toolbar options** to add it on iPhone. No default shortcuts are assigned. In-place type commands change Markdown only; use Tasks' own commands for completion dates, recurrence and other Tasks side effects.
+
+See the [full transition matrix](docs/TRANSITIONS.md). Update all devices to 0.4.0+ for tracked-note history support. No stored IDs or schema fields are rewritten on upgrade.
 
 ## Everyday use
 
@@ -58,7 +70,7 @@ The source becomes `[>]`; the new destination is `[ ]`. Counts progress **0 → 
 
 **View task history** shows note paths, status symbols, action, timestamp, count, and optional reason, with an **Open occurrence** button for each row. Missing targets, duplicate anchors, broken reciprocal references, and conflicting successors are reported explicitly. Running a transfer command on an archived occurrence with a successor offers to open that successor or view history.
 
-BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the manual status commands and visual styling:
+BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the base visual styling, while Lineage supplies the history-aware type commands:
 
 | Markdown | Meaning |
 |---|---|
@@ -70,7 +82,7 @@ BuJo Lineage preserves these Markdown meanings. BuJo Bullets supplies the manual
 | `- [o]` | Event |
 | `- Some note` | Ordinary note, not a checkbox task |
 
-Manual status changes remain the responsibility of BuJo Bullets or your editor. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage provides one event-capture helper, and does not modify BuJo Bullets settings or duplicate its full status command set. Its optional appearance layer adds colors, spacing, and touch sizing without changing the status symbols.
+Use the BuJo Lineage type commands for history-aware status changes. Original BuJo Bullets commands and manual edits remain independent and can bypass Lineage protections. Reopening an archived copy manually can create a branch; history reports multiple open occurrences. BuJo Lineage provides its own history-aware entry type commands without modifying BuJo Bullets settings. Its optional appearance layer adds colors, spacing, and touch sizing without changing the status symbols.
 
 ## Settings and destination rules
 
@@ -82,7 +94,7 @@ BuJo Bullets configures symbols and signifier meanings. BuJo Lineage optionally 
 
 The core Daily Notes plugin has no formal settings API. This version reads its existing `daily-notes.json` configuration through the public vault adapter, under `vault.configDir` (normally `.obsidian`). It validates the folder/format fields and never writes the core configuration or uses private core-plugin properties. When the file is absent, it uses the explicit fallback folder/format settings; malformed or unreadable configuration produces an error and leaves the destination for manual selection. No third-party daily-note plugin is required. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
 
-Migrate task and Schedule for later accept an open checkbox, an ordinary bullet, a plain text line, or an event when explicitly invoked. Events are explicitly converted to open tasks at the destination; the modal explains this before confirmation. Plain lines are normalized to checkbox tasks only as part of the committed transfer; cancellation and failed prevalidation leave them unchanged. Ordinary bullets elsewhere remain notes, not automatically indexed tasks. Completed/cancelled entries, archived sources, headings, quotes, frontmatter and fenced code remain rejected. The original list marker and indentation, signifiers, tags, dates, and existing valid source anchor are retained. **All contiguous deeper-indented child content**, including blank lines leading into further indented content, moves to the destination; it is removed from the historical source so actionable subtasks are not duplicated after success. Unindented following paragraphs are separate note content. Children with their own block anchors or lineage are rejected to avoid copying anchors; move those separately first. Nested recurring/dependency-bearing tasks also cause rejection. Keep the cursor on the checkbox line, not a child paragraph.
+Migrate task and Schedule for later accept an open checkbox, an ordinary bullet, a plain text line, or an event when explicitly invoked. Events are explicitly converted to open tasks at the destination; the modal explains this before confirmation. Plain lines are normalized to checkbox tasks only as part of the committed transfer; cancellation and failed prevalidation leave them unchanged. Ordinary bullets elsewhere remain notes, not automatically indexed tasks. Current completed/cancelled entries can transfer after confirmation; archived entries with successors offer to open those successors. Headings, quotes, frontmatter and fenced code remain protected. The original list marker and indentation, signifiers, tags, dates, and existing valid source anchor are retained. **All contiguous deeper-indented child content**, including blank lines leading into further indented content, moves to the destination; it is removed from the historical source so actionable subtasks are not duplicated after success. Unindented following paragraphs are separate note content. Children with their own block anchors or lineage are rejected to avoid copying anchors; move those separately first. Nested recurring/dependency-bearing tasks also cause rejection. Keep the cursor on the checkbox line, not a child paragraph.
 
 ## Portable storage
 
@@ -195,7 +207,7 @@ python3 scripts/package.py
 
 Node 18+ is recommended (validated here with Node 24.19.0 / npm 11.9.0). Python 3 is only needed for packaging. The lockfile is committed. Runtime uses only Obsidian and its provided CodeMirror modules; no Node or server imports are shipped. `npm run dev` runs the upstream esbuild watch workflow. For browser checks, install Chromium locally, set `BUJO_CHROMIUM` to its executable, or run `npx playwright-core install chromium` and use the downloaded browser. Playwright and Markdown language test fixtures are development-only dependencies. See [validation results](docs/VALIDATION.md).
 
-Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its symbols, signifiers, and manual status commands. `appearance.ts` manages temporary styling classes and reading-view spans; `editor-highlights.ts` adds viewport-only CodeMirror decorations. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
+Architecture: `lineage.ts` owns pure parsing/metadata/planning, the testable storage engine and history reconstruction; `tasks-interop.ts` is the syntax adapter; `obsidian-adapter.ts` implements editor/vault access, journal persistence, commands and native modals; the entrypoint registers only lineage features and settings. BuJo Bullets owns its symbols and signifiers; Lineage adds history-aware type commands. `appearance.ts` manages temporary styling classes and reading-view spans; `editor-highlights.ts` adds viewport-only CodeMirror decorations. Tests use in-memory storage and actual adapter code bundled against Obsidian test doubles.
 
 Deferred: bulk migration, automatic daily rollover, heading/template placement, calendars, dashboards, dependency-safe transfer, same-note migrations, recurrence transfer and automatic conflict merging. Very large vaults can make explicit rebuilds slower; no background service is involved.
 

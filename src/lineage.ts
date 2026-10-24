@@ -1,5 +1,5 @@
 /** Portable core: no Obsidian or Node dependencies. */
-import { assertCaptureContext, eventLine } from './event-command';
+import { assertCaptureContext, formatEntry } from './entry-syntax';
 import { rejectUnsupportedTasks, scheduled, splitTasksSuffix } from './tasks-interop';
 export interface Meta {
   v: 1; lineage: string; occurrence: string; count: number;
@@ -29,7 +29,9 @@ export function tasks(text: string): Task[] {
     const f = lines[i].match(/^\s*(`{3,}|~{3,})/);
     if(f) { if(!fence) { fence=f[1][0]; fenceLength=f[1].length; } else if(f[1][0]===fence && f[1].length>=fenceLength) fence=''; continue; }
     if(fence) continue;
-    const m = lines[i].match(/^(\s*)([-+*]|\d+[.)]) \[(.)\] /); if(!m) continue;
+    const checkbox = lines[i].match(/^(\s*)([-+*]|\d+[.)]) \[(.)\](?: |$)/);
+    const note = !checkbox && lines[i].includes('<!--bujo-lineage:') ? lines[i].match(/^(\s*)([-+*]|\d+[.)]) /) : null;
+    const m=checkbox || note; if(!m) continue;
     let end=i+1;
     const width=(s:string)=>s.match(/^\s*/)![0].replace(/\t/g,'    ').length;
     while(end<lines.length) {
@@ -41,7 +43,7 @@ export function tasks(text: string): Task[] {
     const block = lines[i].match(/ \^([A-Za-z0-9-]+)\s*$/)?.[1];
     const meta=decode(lines[i]);
     if(meta && meta.occurrence !== block) throw Error('Lineage block anchor is missing or changed. Restore the anchor before proceeding.');
-    result.push({start:i,end,raw:lines.slice(i,end).join('\n'),line:lines[i],children:lines.slice(i+1,end).join('\n'),status:m[3],block,meta});
+    result.push({start:i,end,raw:lines.slice(i,end).join('\n'),line:lines[i],children:lines.slice(i+1,end).join('\n'),status:checkbox ? checkbox[3] : 'note',block,meta});
   }
   return result;
 }
@@ -52,16 +54,11 @@ export function selected(text: string, line: number): Task {
 export function capture(text:string,line:number):Task {
   assertCaptureContext(text,line);
   const existing=tasks(text).find(task=>task.start===line);
-  if(existing) {
-    // An explicit transfer may turn an event into a new open task. Keep the
-    // original [o] snapshot for cancellation, compare-and-swap, and recovery.
-    if(existing.status==='o')return {...existing,status:' ',line:existing.line.replace(/^(\s*(?:[-+*]|\d+[.)]) \[)o(\])/, '$1 $2')};
-    return existing;
-  }
+  if(existing)return {...existing,status:' ',line:formatEntry(existing.line,'open')};
   const lines=text.split('\n');
   if(!lines[line].trim())throw Error('Enter task text before migrating or scheduling.');
   const original=lines[line];
-  lines[line]=eventLine(text,line).replace(/^(\s*(?:[-+*]|\d+[.)]) \[)o(\])/, '$1 $2');
+  lines[line]=formatEntry(lines[line],'open');
   const task=selected(lines.join('\n'),line);
   return {...task,raw:original+(task.children?'\n'+task.children:'')};
 }
