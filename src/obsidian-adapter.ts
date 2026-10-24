@@ -2,7 +2,7 @@ import { MarkdownView, Modal, Notice, Setting, TFile, TFolder, moment } from 'ob
 import type BuJoPlugin from './index';
 import { eventLine } from './event-command';
 import { coreDailySettings, tomorrowPath } from './daily';
-import { blockTargets, Engine, Located, Plan, Task, history, path, plan, selected, tasks, validate } from './lineage';
+import { blockTargets, capture, sourceMatches, Engine, Located, Plan, Task, history, path, plan, tasks, validate } from './lineage';
 
 export class LineageController {
   engine: Engine;
@@ -73,12 +73,12 @@ export class LineageController {
     }});
     for(const action of ['migrate','schedule'] as const) this.plugin.addCommand({id:action+'-task',icon:action==='migrate'?'arrow-right':'calendar-clock',name:action==='migrate'?'Migrate task':'Schedule for later',editorCallback:(editor,view)=> {
       try { if(this.hasPending()) throw Error('A transfer needs recovery. Run Recover pending transfers.');
-        if(!view.file) return; const t=selected(editor.getValue(),editor.getCursor().line);
+        if(!view.file) return; const t=capture(editor.getValue(),editor.getCursor().line);
         if(t.meta?.next) { const m=new Modal(this.app);m.titleEl.setText('This occurrence has moved');new Setting(m.contentEl).setDesc('Open its successor or inspect the complete task history.').addButton(b=>b.setButtonText('Open successor').onClick(()=>{void this.openOccurrence(t.meta!.next!);m.close();})).addButton(b=>b.setButtonText('View history').onClick(()=>{void this.showHistory(t);m.close();}));m.open();return; }
         validate(t); new TransferModal(this,view.file.path,t,action).open();
       } catch(e) {this.notice(e);}
     }});
-    this.plugin.addCommand({id:'view-task-history',icon:'history',name:'View task history',editorCallback:(editor)=> {try { const t=selected(editor.getValue(),editor.getCursor().line); void this.showHistory(t); } catch(e){this.notice(e);} }});
+    this.plugin.addCommand({id:'view-task-history',icon:'history',name:'View task history',editorCallback:(editor)=> {try { const t=capture(editor.getValue(),editor.getCursor().line); void this.showHistory(t); } catch(e){this.notice(e);} }});
     this.plugin.addCommand({id:'recover-pending-transfers',icon:'rotate-ccw',name:'Recover pending transfers',callback:()=>this.recoveryModal()});
     this.app.workspace.onLayoutReady(()=> { void this.rebuild().then(()=>this.recover()); });
   }
@@ -107,7 +107,7 @@ export class LineageController {
     dest=path(dest); this.checkPath(dest);
     const f=this.app.vault.getAbstractFileByPath(source); if(!(f instanceof TFile)) throw Error('Source moved while the dialog was open. Reopen the command.');
     // Exact task snapshot is relocated by content, never by a remembered line number.
-    const matches=tasks(await this.read(f)).filter(x=>x.raw===t.raw); if(matches.length!==1) throw Error('Source changed or is ambiguous. Cancel and reopen the command.');
+    const matches=sourceMatches(await this.read(f),t.raw); if(matches.length!==1) throw Error('Source changed or is ambiguous. Cancel and reopen the command.');
     const p=plan(t,source,dest,action,reason,date,(target,block,alias,from)=> {
       if(!target) target=this.entries().find(e=>e.task.block===block)?.path || source;
       const file=this.app.vault.getAbstractFileByPath(target);
@@ -162,7 +162,7 @@ class TransferModal extends Modal {
     if(this.dismissed)return;
     if(destinationError)this.contentEl.createEl('p',{text:destinationError,attr:{role:'alert'}});
     let reason='',date=''; let running=false;
-    this.contentEl.createEl('p',{text:'Search existing notes or enter a new note path. Existing folders only. Moving to tomorrow does not set a due date. Attached child content moves with the task.'});
+    this.contentEl.createEl('p',{text:'Search existing notes or enter a new note path. Existing folders only. Moving to tomorrow does not set a due date. Attached child content moves with the task. Plain text or bullets become checkbox tasks only when the transfer succeeds.'});
     const list=this.contentEl.createEl('div');
     const render=(filter:string)=> {list.empty(); const files=this.app.vault.getMarkdownFiles().filter(f=>f.path!==this.source && f.path.toLowerCase().includes(filter.toLowerCase())).slice(0,12);for(const f of files){const b=list.createEl('button',{text:f.path});b.onclick=()=>{destination=f.path;input.setValue(destination);list.empty();};}};
     let input:import('obsidian').TextComponent;

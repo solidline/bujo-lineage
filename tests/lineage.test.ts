@@ -4,7 +4,7 @@ import { tomorrowPath } from '../src/daily';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {Engine,Plan,decode,encode,history,id,path,plan,selected,tasks,validDate} from '../src/lineage';
+import {capture,Engine,Plan,decode,encode,history,id,path,plan,selected,tasks,validDate} from '../src/lineage';
 const link=(p:string,b:string,a:string)=>`[[${p}#^${b}|${a}]]`;
 const make=(text='- [ ] ! Book car service #home 📅 2026-12-01',source='Daily/A.md',dest='Folder/B.md',action:'migrate'|'schedule'='migrate',date?:string)=>plan(selected(text,0),source,dest,action,'why -->\n<script>',date,link);
 function fixture(initial='- [ ] Book car service') {
@@ -127,4 +127,26 @@ test('event capture rejects code, tracked/history tasks and closed statuses',()=
  for(const [text,line] of [['```md\n- [ ] Example\n```',1],['~~~\ntext\n~~~',1],['---\ntitle: note\n---',1],['- [x] Done',0],['- [-] Cancelled',0],['- [>] Moved',0],['- [<] Scheduled',0],['- [ ] Recurring 🔁 every day',0],['- [ ] Dependency 🆔 abc',0],['# Heading',0]] as const)assert.throws(()=>eventLine(text,line));
  assert.throws(()=>eventLine(make().destination,0),/lineage history/);
  assert.equal(eventLine('```\ncode\n```\nMeeting',3),'- [o] Meeting');
+});
+
+
+test('explicit transfer capture accepts bullets/plain text without changing ordinary-note indexing',async()=> {
+ for(const raw of ['Task line','- Task line','-  Task line','  * Task line #tag ^existing']) {
+  const f=fixture(raw+'\n    attached note');const before=f.files.get('Daily/A.md')!;
+  const t=capture(before,0);assert.equal(t.raw,before);assert.equal(f.saves,0);assert.equal(f.files.get('Daily/A.md'),before);assert.equal(tasks(before).length,0);
+  const p=plan(t,'Daily/A.md','Folder/B.md','migrate','',undefined,link);await new Engine([],f.io).run(p);
+  const source=tasks(f.files.get('Daily/A.md')!)[0],destination=tasks(f.files.get('Folder/B.md')!)[0];
+  assert.equal(source.status,'>');assert.equal(destination.status,' ');assert.equal(destination.meta!.count,1);assert.equal(source.meta!.lineage,destination.meta!.lineage);assert.match(destination.raw,/attached note/);assert.doesNotMatch(source.raw,/attached note/);
+ }
+});
+test('plain capture schedule uses the original snapshot for restart recovery',async()=> {
+ const f=fixture('- Plan trip');const t=capture(f.files.get('Daily/A.md')!,0);const p=plan(t,'Daily/A.md','Future Log.md','schedule','later',undefined,link);
+ f.fail('Daily/A.md');await assert.rejects(new Engine([],f.io).run(p));assert.equal(f.files.get('Daily/A.md'),'- Plan trip');
+ f.fail('');const engine=new Engine(f.journal,f.io);await engine.run(engine.journal[0]);assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,'<');assert.equal(tasks(f.files.get('Future Log.md')!).length,1);
+});
+test('capture rejects unsafe contexts and plain-source child edits remain protected',async()=> {
+ for(const [raw,line] of [['```\nTask\n```',1],['---\n- [ ] config\n---',1],['# Heading',0],['> Quote',0],['',0]] as const)assert.throws(()=>capture(raw,line));
+ const f=fixture('Task');const p=plan(capture('Task',0),'Daily/A.md','Folder/B.md','migrate','',undefined,link);
+ const io={...f.io,update:async(path:string,fn:(s:string)=>string)=>{await f.io.update(path,fn);if(path==='Folder/B.md')f.files.set('Daily/A.md','Task\n  - [ ] new child');}};
+ await assert.rejects(new Engine([],io).run(p),/Source changed/);assert.equal(f.files.get('Daily/A.md'),'Task\n  - [ ] new child');
 });

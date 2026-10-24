@@ -1,4 +1,5 @@
 /** Portable core: no Obsidian or Node dependencies. */
+import { assertCaptureContext, eventLine } from './event-command';
 import { rejectUnsupportedTasks, scheduled, splitTasksSuffix } from './tasks-interop';
 export interface Meta {
   v: 1; lineage: string; occurrence: string; count: number;
@@ -47,6 +48,27 @@ export function tasks(text: string): Task[] {
 export function selected(text: string, line: number): Task {
   const t=tasks(text).find(t=>t.start===line); if(!t) throw Error('Place the cursor on a checkbox task outside code fences.'); return t;
 }
+/** Explicit command capture only: ordinary bullets remain notes in the vault index. */
+export function capture(text:string,line:number):Task {
+  assertCaptureContext(text,line);
+  const existing=tasks(text).find(task=>task.start===line);
+  if(existing)return existing;
+  const lines=text.split('\n');
+  if(!lines[line].trim())throw Error('Enter task text before migrating or scheduling.');
+  const original=lines[line];
+  lines[line]=eventLine(text,line).replace(/^(\s*(?:[-+*]|\d+[.)]) \[)o(\])/, '$1 $2');
+  const task=selected(lines.join('\n'),line);
+  return {...task,raw:original+(task.children?'\n'+task.children:'')};
+}
+/** Match a complete captured block, including child content, without a saved line number. */
+export function sourceMatches(text:string,expected:string):Task[] {
+  const first=expected.split('\n')[0];const result:Task[]=[];
+  for(const [line,value] of text.split('\n').entries()) {
+    if(value!==first)continue;
+    try {const candidate=capture(text,line);if(candidate.raw===expected)result.push(candidate);} catch { /* Ineligible source context is not a match. */ }
+  }
+  return result;
+}
 export function validate(t: Task): void {
   if(t.status!== ' ') throw Error(t.meta?.next ? 'Archived occurrence: open its successor from task history.' : 'Only open tasks can be transferred.');
   rejectUnsupportedTasks(t.raw);
@@ -80,7 +102,7 @@ export function plan(t: Task, sourcePath: string, destinationPath: string, actio
 }
 export function replaceExact(text: string, expected: string, replacement: string): string {
   const lines=text.split('\n'), needle=expected.split('\n');
-  const hits=tasks(text).filter(t=>t.raw===expected).map(t=>t.start);
+  const hits=sourceMatches(text,expected).map(t=>t.start);
   if(hits.length!==1) throw Error('Source changed or is ambiguous. Restore the captured source, then retry recovery; no user edits were overwritten.');
   lines.splice(hits[0],needle.length,...replacement.split('\n')); return lines.join('\n');
 }

@@ -10,11 +10,11 @@ Repository: [solidline/bujo-lineage](https://github.com/solidline/bujo-lineage).
 
 With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, run **BRAT: Add a beta plugin for testing**, enter `solidline/bujo-lineage`, and add it. Keep **BuJo Bullets** enabled and enable **BuJo Lineage** alongside it in Community plugins. BRAT is an optional installer/updater, not a runtime dependency.
 
-For manual installation, download `bujo-lineage-0.3.11.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
+For manual installation, download `bujo-lineage-0.3.12.zip` from the [latest release](https://github.com/solidline/bujo-lineage/releases/latest) and follow the folder instructions below. The release also includes direct `main.js`, `manifest.json`, and `styles.css` assets for Obsidian installers. This add-on has not been submitted to Obsidian's community plugin directory.
 
 ## Install the built version
 
-1. Download and extract `bujo-lineage-0.3.11.zip`, or copy `dist/bujo-lineage/` from this repository.
+1. Download and extract `bujo-lineage-0.3.12.zip`, or copy `dist/bujo-lineage/` from this repository.
 2. Put its folder at `<vault>/.obsidian/plugins/bujo-lineage/`. That folder must directly contain `main.js`, `manifest.json`, `styles.css`, and the license files, with no extra nested folder.
 3. **Keep the original BuJo Bullets plugin enabled.** It provides checkbox styles, configurable signifiers, and manual status commands. BuJo Lineage adds migration, scheduling, history, and recovery plus optional appearance; it does not duplicate status commands or replace BuJo symbols.
 4. Reload Obsidian, open Settings → Community plugins, and enable **BuJo Lineage**. Requires Obsidian 1.8.0 or later. Use a disposable vault first.
@@ -50,7 +50,7 @@ To assign a keyboard shortcut, open **Settings → Hotkeys**, search **Set curre
 
 ## Everyday use
 
-Capture `- [ ] ! Book car service #home`. Place the cursor on that parent line and run **Migrate task**. Search existing Markdown paths, tap a result, or enter a new note path. The initial suggestion is tomorrow's daily note. Enter an optional reason and tap **Transfer task**. Cancel or dismiss the modal to leave the vault unchanged.
+Capture `- [ ] ! Book car service #home`, `- Book car service`, or simply `Book car service`. Place the cursor on that parent line and run **Migrate task**. Search existing Markdown paths, tap a result, or enter a new note path. The initial suggestion is tomorrow's daily note. Enter an optional reason and tap **Transfer task**. Cancel or dismiss the modal to leave the vault unchanged.
 
 The source becomes `[>]`; the new destination is `[ ]`. Counts progress **0 → 1 → 2**, and each successful transfer leaves one current open occurrence of that lineage. Renaming “Book car service” to “Call mechanic” does not create a new commitment. A recurrence instance is a separate commitment, so automatic transfer of recurring tasks is rejected in v1.
 
@@ -82,7 +82,7 @@ BuJo Bullets configures symbols and signifier meanings. BuJo Lineage optionally 
 
 The core Daily Notes plugin has no formal settings API. This version reads its existing `daily-notes.json` configuration through the public vault adapter, under `vault.configDir` (normally `.obsidian`). It validates the folder/format fields and never writes the core configuration or uses private core-plugin properties. When the file is absent, it uses the explicit fallback folder/format settings; malformed or unreadable configuration produces an error and leaves the destination for manual selection. No third-party daily-note plugin is required. It appends at the end of a destination, separated by a blank line. It creates a missing note but **does not create folders**, execute templates, choose headings, or migrate within the same note. Paths are relative, Markdown-only, and reject traversal and reserved link characters. Destination search shows up to 12 matching full paths, so duplicate basenames remain distinguishable.
 
-Only open checkbox tasks outside fenced code are transferable. Completed/cancelled/event/ordinary entries and archived sources are rejected. The original list marker and indentation, signifiers, tags, dates, and existing valid source anchor are retained. **All contiguous deeper-indented child content**, including blank lines leading into further indented content, moves to the destination; it is removed from the historical source so actionable subtasks are not duplicated after success. Unindented following paragraphs are separate note content. Children with their own block anchors or lineage are rejected to avoid copying anchors; move those separately first. Nested recurring/dependency-bearing tasks also cause rejection. Keep the cursor on the checkbox line, not a child paragraph.
+Migrate task and Schedule for later accept an open checkbox, an ordinary bullet, or a plain text line when explicitly invoked. Plain lines are normalized to checkbox tasks only as part of the committed transfer; cancellation and failed prevalidation leave them unchanged. Ordinary bullets elsewhere remain notes, not automatically indexed tasks. Completed/cancelled/event entries, archived sources, headings, quotes, frontmatter and fenced code remain rejected. The original list marker and indentation, signifiers, tags, dates, and existing valid source anchor are retained. **All contiguous deeper-indented child content**, including blank lines leading into further indented content, moves to the destination; it is removed from the historical source so actionable subtasks are not duplicated after success. Unindented following paragraphs are separate note content. Children with their own block anchors or lineage are rejected to avoid copying anchors; move those separately first. Nested recurring/dependency-bearing tasks also cause rejection. Keep the cursor on the checkbox line, not a child paragraph.
 
 ## Portable storage
 
@@ -220,3 +220,7 @@ All five commands now declare native Obsidian icons: Migrate task → arrow-righ
 ### Events rendered by Tasks (0.3.11)
 
 With **BuJo journal styling** enabled, `[o]` events use a hollow-circle marker rather than a filled completed checkbox, including when Tasks supplies checked styling. Event text is not struck through. This is a visual override only: checkbox state, Markdown, task data, and another plugin's configuration are not changed. In **Tasks → Statuses**, configure symbol `o` with type **NON_TASK** so queries treat events as non-tasks; visual styling alone cannot change Tasks' classification. Completed `x` tasks and completed subtasks under events retain their own styling. Disable journal styling to restore the host rendering.
+
+### Plain-text and bullet capture (0.3.12)
+
+Migrate task, Schedule for later, and Set current line as event work on both `- Task line` and `Task line`. View task history reports no history yet for an untracked plain line without changing it. Transfer commands preserve source text as their recovery snapshot, so a failure/restart does not require a pre-existing checkbox or saved line number. On success, migration produces a historical `[>]` source (or `[<]` for scheduling) and one `[ ]` destination. Task children, tags, and block anchors are retained appropriately.

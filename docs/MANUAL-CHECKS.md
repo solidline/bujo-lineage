@@ -66,3 +66,7 @@ Search Set current line as event in the command palette and Settings → Hotkeys
 ## Tasks event appearance (0.3.11)
 
 With Tasks and journal styling enabled, create - [o] Firestone event and a separate - [x] completed task. Confirm the event is an empty circle without a checkmark/strike-through in Live Preview and Reading View, while the completed task remains checked. Add a completed child task under the event and verify it is not restyled as an event. Toggle journal styling off/on. In Tasks settings, manually set o to NON_TASK and verify queries reflect that classification. No plugin settings should be modified by Lineage.
+
+## Plain capture (0.3.12)
+
+Try Task line, - Task line, and - [ ] Task line with Migrate task and Schedule for later. Cancel first and confirm no note text changed, then commit and verify historical source/open destination, count 0/1, children, tags, and anchors. Edit the source while the modal is open and verify rejection without task writes. Check Set current line as event on plain text/bullets. View task history on an untouched plain line should explain that history starts at the first transfer. Recovery remains journal-based, not cursor-based.

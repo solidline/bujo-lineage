@@ -2,7 +2,7 @@ import moment from 'moment';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { LineageController } from '../src/obsidian-adapter';
-import { selected,tasks } from '../src/lineage';
+import { capture,selected,tasks } from '../src/lineage';
 import { MarkdownView,MockEditor,TFile,TFolder } from './obsidian-mock';
 import type BuJoPlugin from '../src/index';
 function fixture(){
@@ -95,4 +95,17 @@ test('migration to resolved tomorrow writes inside the Daily Notes folder, not v
  await f.controller.transfer('Daily/A.md',selected(f.files.get('Daily/A.md')!,0),destination,'migrate','');
  assert.ok(f.files.has(destination));assert.equal(f.files.has(destination.replace(/^Daily\//,'')),false);
  assert.equal(tasks(f.files.get(destination)!)[0].status,' ');assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,'>');
+});
+
+
+test('actual adapter migrates and schedules explicit plain captures, preserving stale-modal checks',async()=> {
+ for(const raw of ['Task line','- Task line']) {
+  for(const action of ['migrate','schedule'] as const) {
+   const f=fixture();f.files.set('Daily/A.md',raw);await f.controller.start();const t=capture(raw,0);
+   await f.controller.transfer('Daily/A.md',t,'Other/Note.md',action,'');
+   assert.equal(tasks(f.files.get('Daily/A.md')!)[0].status,action==='migrate'?'>':'<');assert.equal(tasks(f.files.get('Other/Note.md')!)[0].status,' ');
+  }
+ }
+ const f=fixture();f.files.set('Daily/A.md','Task line');await f.controller.start();const t=capture('Task line',0);f.files.set('Daily/A.md','Task line edited');
+ await assert.rejects(f.controller.transfer('Daily/A.md',t,'Other/Note.md','migrate',''),/Source changed/);assert.equal(f.files.get('Other/Note.md'),'');
 });
